@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>One Step at a Time — Your Step 1 Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* green palette — "One Step at a Time" */
+    --bg1:#EDF6F0; --bg2:#E6F2EC; --bg3:#F2F9EE;
+    --surface:#FFFFFF; --surface-2:#F7FBF8;
+    --ink:#25332B; --muted:#6F8378; --faint:#A6B7AE;
+    /* primary accent (green) — var name kept as --coral throughout */
+    --coral:#2FA36B; --coral-deep:#1E7A50; --coral-soft:#E1F4EA;
+    /* secondary accent (teal) — var name kept as --plum */
+    --plum:#2E9E9A; --plum-soft:#DBF1F0;
+    --sage:#5BB98C; --sage-soft:#E4F5EC;
+    --gold:#E9A02F; --gold-soft:#FBEFD6;
+    --sky:#4C9BD6; --sky-soft:#E2EFFA;
+    --alert:#DB6A43; --alert-soft:#FBE7DD;
+    --line:#E7F0EA; --line-2:#DDE9E1;
+    --shadow:0 8px 30px rgba(30,90,60,.10);
+    --shadow-sm:0 3px 12px rgba(30,90,60,.08);
+    --r:20px; --r-sm:14px; --r-lg:28px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Nunito',system-ui,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 15% -5%, var(--bg3), transparent 60%),
+      radial-gradient(1000px 700px at 100% 0%, var(--bg2), transparent 55%),
+      linear-gradient(160deg, var(--bg1), var(--bg2));
+    background-attachment:fixed;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-.01em}
+  input,button,select{font-family:inherit;font-size:16px}
+  button{cursor:pointer;border:none;background:none;color:inherit}
+  a{color:var(--plum);text-decoration:none}
+  ::selection{background:var(--coral-soft)}
+
+  /* ---------- Layout ---------- */
+  .app{display:flex;min-height:100vh}
+  .sidebar{
+    width:230px;flex-shrink:0;padding:26px 16px;position:sticky;top:0;height:100vh;
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;padding:6px 10px 22px}
+  .brand .logo{font-size:26px}
+  .brand .name{font-family:'Fraunces';font-weight:600;font-size:16px;line-height:1.15}
+  .brand .sub{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.03em}
+  .nav-btn{
+    display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r-sm);
+    color:var(--muted);font-weight:700;font-size:15px;transition:.18s;width:100%;text-align:left;
+  }
+  .nav-btn .ic{font-size:19px;width:22px;text-align:center}
+  .nav-btn:hover{background:#fff;color:var(--ink)}
+  .nav-btn.active{background:#fff;color:var(--coral-deep);box-shadow:var(--shadow-sm)}
+  .nav-spacer{flex:1}
+  .star-chip{
+    display:flex;align-items:center;justify-content:center;gap:7px;margin-top:4px;
+    background:linear-gradient(135deg,var(--gold-soft),#FFF9EE);border:1px solid #FBE6BE;
+    padding:11px;border-radius:var(--r-sm);font-weight:800;color:#B77A17;
+  }
+  .star-chip .n{font-size:18px}
+  .star-chip.pulse{animation:pulse .5s ease}
+  @keyframes pulse{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+  .main{flex:1;min-width:0;padding:34px 40px 60px;max-width:1040px;margin:0 auto;width:100%}
+  section.view{display:none;animation:fade .35s ease}
+  section.view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:22px}
+  .card+.card{margin-top:18px}
+  .grid{display:grid;gap:18px}
+  .eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--coral-deep)}
+  .muted{color:var(--muted)}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:12.5px;font-weight:700}
+
+  /* ---------- Home hero ---------- */
+  .hero{
+    background:linear-gradient(135deg,#fff, var(--surface-2));
+    border-radius:var(--r-lg);padding:30px 32px;box-shadow:var(--shadow);
+    display:grid;grid-template-columns:1fr auto;gap:26px;align-items:center;
+    position:relative;overflow:hidden;
+  }
+  .hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;
+    background:radial-gradient(circle,var(--coral-soft),transparent 70%);opacity:.7}
+  .hello{font-size:14px;font-weight:800;color:var(--coral-deep);letter-spacing:.02em}
+  .hero h1{font-size:34px;margin:6px 0 4px;line-height:1.08}
+  .editname{cursor:pointer;border-bottom:2px dotted var(--faint)}
+  .encourage{font-size:16px;color:var(--muted);font-weight:600;max-width:44ch;margin-top:8px}
+  .ring-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;z-index:1}
+  .ring{position:relative;width:150px;height:150px}
+  .ring svg{transform:rotate(-90deg)}
+  .ring .pct{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ring .pct b{font-family:'Fraunces';font-size:30px;line-height:1}
+  .ring .pct span{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+  .stat{background:var(--surface);border-radius:var(--r-sm);padding:16px;box-shadow:var(--shadow-sm);text-align:center}
+  .stat .big{font-family:'Fraunces';font-size:26px;line-height:1}
+  .stat .lab{font-size:11.5px;font-weight:800;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-top:5px}
+  .stat.coral .big{color:var(--coral-deep)} .stat.plum .big{color:var(--plum)}
+  .stat.sage .big{color:var(--sage)} .stat.gold .big{color:#C98A12}
+
+  .status-line{margin-top:16px;padding:14px 18px;border-radius:var(--r-sm);font-weight:700;display:flex;gap:10px;align-items:center}
+  .status-ahead{background:var(--sage-soft);color:#2E8467}
+  .status-ontrack{background:var(--plum-soft);color:#1E7A6E}
+  .status-behind{background:var(--gold-soft);color:#A9720F}
+
+  .italy{margin-top:18px;background:linear-gradient(120deg,#F1F8EC,#FBF4E2);border:1px dashed #DCD3A6;
+    border-radius:var(--r);padding:18px 22px;display:flex;gap:14px;align-items:center}
+  .italy .big{font-size:30px}
+  .italy .t{font-weight:800}
+  .italy .s{font-size:13.5px;color:var(--muted);font-weight:600}
+
+  /* ---------- Section headers ---------- */
+  .page-head{margin-bottom:22px}
+  .page-head h2{font-size:28px;margin:4px 0 0}
+  .page-head p{color:var(--muted);font-weight:600;margin:6px 0 0}
+
+  /* ---------- Tasks / checklist ---------- */
+  .task{display:flex;align-items:flex-start;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)}
+  .task:last-child{border-bottom:none}
+  .check{
+    flex-shrink:0;width:24px;height:24px;border-radius:8px;border:2px solid var(--line-2);
+    display:flex;align-items:center;justify-content:center;transition:.15s;margin-top:1px;background:#fff;
+  }
+  .check svg{width:14px;height:14px;opacity:0;transform:scale(.5);transition:.15s;stroke:#fff}
+  .task.done .check{background:var(--sage);border-color:var(--sage)}
+  .task.done .check svg{opacity:1;transform:scale(1)}
+  .task .label{font-weight:600;font-size:15px;line-height:1.4;flex:1}
+  .task.done .label{color:var(--faint);text-decoration:line-through}
+  .task .rew{font-size:12px;font-weight:800;color:#C98A12;flex-shrink:0;margin-top:2px}
+  .task:hover .check{border-color:var(--sage)}
+
+  /* ---------- Progress bar ---------- */
+  .bar{height:9px;background:var(--line);border-radius:999px;overflow:hidden}
+  .bar > i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--coral),var(--coral-deep));transition:width .5s ease}
+  .bar.sage > i{background:linear-gradient(90deg,#6ED0AF,var(--sage))}
+  .bar.gold > i{background:linear-gradient(90deg,#FFD37A,var(--gold))}
+
+  /* ---------- System cards (Content Review) ---------- */
+  .sys{border-radius:var(--r);background:#fff;box-shadow:var(--shadow-sm);overflow:hidden}
+  .sys+.sys{margin-top:14px}
+  .sys-head{display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+  .sys-emoji{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+  .sys-head .info{flex:1;min-width:0}
+  .sys-head .title{font-family:'Fraunces';font-weight:600;font-size:18px}
+  .sys-head .meta{font-size:12.5px;color:var(--muted);font-weight:700;margin-top:2px}
+  .sys-head .barwrap{margin-top:8px;max-width:340px}
+  .sys-head .chev{color:var(--faint);transition:.2s;font-size:18px}
+  .sys.open .chev{transform:rotate(90deg)}
+  .sys-body{display:none;padding:2px 20px 12px}
+  .sys.open .sys-body{display:block}
+  .sys-done-badge{background:var(--sage-soft);color:#2E8467;font-weight:800;font-size:12px;padding:4px 10px;border-radius:999px}
+  .markall{font-size:12.5px;font-weight:800;color:var(--plum);padding:6px 12px;border-radius:999px;background:var(--plum-soft);margin:8px 0 4px}
+
+  /* ---------- Schedule ---------- */
+  .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px}
+  .tl{border-radius:var(--r);padding:16px;box-shadow:var(--shadow-sm);background:#fff;position:relative;overflow:hidden}
+  .tl .lab{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+  .tl .date{font-family:'Fraunces';font-size:17px;margin:4px 0 2px;font-weight:600}
+  .tl .cd{font-size:13px;font-weight:800}
+  .tl.soft{border-top:4px solid var(--sage)} .tl.soft .cd{color:var(--sage)}
+  .tl.d1{border-top:4px solid var(--sky)} .tl.d1 .cd{color:var(--sky)}
+  .tl.d2{border-top:4px solid var(--gold)} .tl.d2 .cd{color:#C98A12}
+  .tl.d3{border-top:4px solid var(--alert)} .tl.d3 .cd{color:var(--alert)}
+
+  .phase-div{display:flex;align-items:center;gap:14px;margin:26px 0 14px}
+  .phase-div h3{font-size:19px;margin:0;white-space:nowrap}
+  .phase-div .rule{height:2px;background:var(--line-2);flex:1;border-radius:2px}
+  .phase-div .em{font-size:20px}
+
+  .wk{background:#fff;border-radius:var(--r);box-shadow:var(--shadow-sm);margin-bottom:12px;overflow:hidden;border-left:5px solid transparent}
+  .wk.current{border-left-color:var(--coral);box-shadow:var(--shadow)}
+  .wk.deadline{border-left-color:var(--gold)}
+  .wk-head{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer}
+  .wk-num{width:46px;height:46px;border-radius:13px;background:var(--surface-2);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+  .wk-num small{font-size:9px;font-weight:800;color:var(--muted);letter-spacing:.05em}
+  .wk-num b{font-family:'Fraunces';font-size:18px;line-height:1}
+  .wk.current .wk-num{background:var(--coral-soft)} .wk.current .wk-num b{color:var(--coral-deep)}
+  .wk-head .wt{flex:1;min-width:0}
+  .wk-head .wt .tt{font-weight:800;font-size:15.5px}
+  .wk-head .wt .dd{font-size:12.5px;color:var(--muted);font-weight:700;margin-top:2px}
+  .chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+  .syschip{font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:999px}
+  .now-badge{background:var(--coral);color:#fff;font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;letter-spacing:.03em}
+  .wk-body{display:none;padding:0 20px 14px 80px}
+  .wk.open .wk-body{display:block}
+  .wk .chev{color:var(--faint);transition:.2s}
+  .wk.open .chev{transform:rotate(90deg)}
+
+  /* ---------- Resources ---------- */
+  .res-group{margin-bottom:22px}
+  .res-group h3{font-size:17px;margin:0 0 12px;display:flex;align-items:center;gap:9px}
+  .res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .res{display:flex;align-items:center;gap:13px;padding:15px 16px;background:#fff;border-radius:var(--r-sm);box-shadow:var(--shadow-sm);transition:.18s;border:1px solid transparent}
+  .res:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--line-2)}
+  .res .re{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+  .res .rn{font-weight:800;font-size:14.5px}
+  .res .rd{font-size:12px;color:var(--muted);font-weight:600}
+  .res .arrow{margin-left:auto;color:var(--faint)}
+
+  /* ---------- Rewards ---------- */
+  .jar{background:linear-gradient(135deg,#F4FAEE,#FBF3E1);border-radius:var(--r-lg);padding:26px 30px;box-shadow:var(--shadow);text-align:center;position:relative;overflow:hidden}
+  .jar .big{font-family:'Fraunces';font-size:46px;line-height:1;color:#C98A12}
+  .jar .big .s{font-size:34px}
+  .jar .sub{font-weight:700;color:var(--muted);margin-top:4px}
+  .jar .earned{font-size:12.5px;font-weight:700;color:var(--faint);margin-top:6px}
+  .rewards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin-top:20px}
+  .reward{background:#fff;border-radius:var(--r);box-shadow:var(--shadow-sm);padding:18px;display:flex;flex-direction:column;gap:10px;position:relative}
+  .reward.mega{background:linear-gradient(135deg,#F1F8EC,#FBF4E2);border:1px dashed #DCD3A6}
+  .reward .rtop{display:flex;align-items:center;gap:12px}
+  .reward .remoji{font-size:30px}
+  .reward .rname{font-weight:800;font-size:15.5px;line-height:1.2}
+  .reward .rcost{font-weight:800;color:#C98A12;font-size:13.5px}
+  .reward .rbtn{margin-top:2px;padding:11px;border-radius:12px;font-weight:800;font-size:14.5px;transition:.15s}
+  .rbtn.ok{background:var(--coral);color:#fff}
+  .rbtn.ok:hover{background:var(--coral-deep)}
+  .rbtn.no{background:var(--line);color:var(--faint);cursor:not-allowed}
+  .reward .prog{font-size:11.5px;font-weight:700;color:var(--muted)}
+  .history{margin-top:22px}
+  .hitem{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line);font-weight:600}
+  .hitem:last-child{border-bottom:none}
+  .hitem .he{font-size:20px}
+  .hitem .hd{font-size:12px;color:var(--muted);font-weight:700}
+  .hitem .undo{margin-left:auto;font-size:12px;font-weight:800;color:var(--coral-deep);padding:5px 10px;border-radius:999px;background:var(--coral-soft)}
+
+  /* ---------- Toast / modal / confetti ---------- */
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;
+    padding:13px 22px;border-radius:999px;font-weight:800;box-shadow:var(--shadow);opacity:0;transition:.3s;z-index:200;font-size:14.5px}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .modal-bg{position:fixed;inset:0;background:rgba(59,46,68,.4);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:150;padding:20px}
+  .modal-bg.show{display:flex}
+  .modal{background:#fff;border-radius:var(--r-lg);padding:28px;max-width:380px;width:100%;box-shadow:var(--shadow);text-align:center}
+  .modal h3{font-size:22px;margin:0 0 8px}
+  .modal p{color:var(--muted);font-weight:600;margin:0 0 18px}
+  .modal input{width:100%;padding:13px 15px;border-radius:12px;border:2px solid var(--line-2);margin-bottom:16px;outline:none}
+  .modal input:focus{border-color:var(--coral)}
+  .modal .row{display:flex;gap:10px}
+  .modal button{flex:1;padding:12px;border-radius:12px;font-weight:800}
+  .btn-primary{background:var(--coral);color:#fff} .btn-ghost{background:var(--line);color:var(--muted)}
+  .confetti{position:fixed;top:-10px;width:10px;height:16px;z-index:250;pointer-events:none;border-radius:2px}
+  @keyframes fall{to{transform:translateY(105vh) rotate(600deg);opacity:0}}
+
+  .settings-link{font-size:12.5px;font-weight:800;color:var(--faint);margin-top:6px;padding:8px}
+  .settings-link:hover{color:var(--muted)}
+  .footer-note{text-align:center;color:var(--faint);font-size:12.5px;font-weight:700;margin-top:34px}
+
+  /* ---------- Mobile ---------- */
+  @media (max-width:860px){
+    .app{flex-direction:column}
+    .sidebar{
+      width:100%;height:auto;position:fixed;bottom:0;top:auto;left:0;z-index:100;
+      flex-direction:row;padding:8px 6px calc(8px + env(safe-area-inset-bottom));gap:2px;
+      background:rgba(255,255,255,.92);backdrop-filter:blur(12px);box-shadow:0 -4px 20px rgba(90,60,110,.1);
+    }
+    .brand,.nav-spacer,.star-chip,.settings-link{display:none}
+    .nav-btn{flex-direction:column;gap:3px;padding:8px 4px;font-size:10.5px;flex:1;border-radius:12px;text-align:center}
+    .nav-btn .ic{font-size:20px}
+    .nav-btn.active{background:var(--coral-soft)}
+    .main{padding:22px 16px 96px;max-width:100%}
+    .hero{grid-template-columns:1fr;text-align:center;padding:24px 20px}
+    .hero h1{font-size:28px}
+    .ring-wrap{margin:0 auto}
+    .hero::after{display:none}
+    .stat-row{grid-template-columns:repeat(2,1fr)}
+    .timeline{grid-template-columns:repeat(2,1fr)}
+    .wk-body{padding-left:20px}
+    .page-head h2{font-size:24px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar / bottom nav -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">⛰️</div>
+      <div>
+        <div class="name">One Step at a Time</div>
+        <div class="sub">YOUR STEP 1 JOURNEY</div>
+      </div>
+    </div>
+    <button class="nav-btn active" data-view="home"><span class="ic">🏡</span> Home</button>
+    <button class="nav-btn" data-view="schedule"><span class="ic">🗓️</span> Schedule</button>
+    <button class="nav-btn" data-view="review"><span class="ic">📚</span> Review</button>
+    <button class="nav-btn" data-view="resources"><span class="ic">🔗</span> Resources</button>
+    <button class="nav-btn" data-view="rewards"><span class="ic">🎁</span> Rewards</button>
+    <div class="nav-spacer"></div>
+    <div class="star-chip" id="sidebarStars"><span>⭐</span><span class="n">0</span><span>stars</span></div>
+    <button class="settings-link" id="openSettings">⚙︎ Settings</button>
+  </aside>
+
+  <main class="main">
+    <!-- HOME -->
+    <section class="view active" id="view-home"></section>
+    <!-- SCHEDULE -->
+    <section class="view" id="view-schedule"></section>
+    <!-- REVIEW -->
+    <section class="view" id="view-review"></section>
+    <!-- RESOURCES -->
+    <section class="view" id="view-resources"></section>
+    <!-- REWARDS -->
+    <section class="view" id="view-rewards"></section>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="modal-bg" id="modalBg"><div class="modal" id="modalContent"></div></div>
+
+<!-- Firebase (loads in the browser; harmless if you haven't added config yet) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+/* ============================================================
+   ONE STEP AT A TIME — USMLE Step 1 study tracker  (V1)
+   Single-file app. Works instantly with localStorage.
+   Add your Firebase config below to sync across devices.
+   ============================================================ */
+
+/* ---------- 1. FIREBASE CONFIG (paste yours here) ----------
+   Get this from Firebase Console → Project settings → Your apps.
+   Until you fill it in, the app saves locally in the browser. */
+const FIREBASE_CONFIG = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+const DOC_PATH = { collection: "usmleTracker", doc: "shared" };
+
+/* ---------- 2. STUDY DATA ---------- */
+const START = new Date('2026-07-06T00:00:00'); // first Monday of the plan
+const TOTAL_WEEKS = 34;
+const DEADLINES = {
+  soft:      new Date('2027-02-28T00:00:00'), // take it by end of Feb → March is free
+  preStep:   new Date('2027-01-29T00:00:00'), // pre-step by
+  lastPre:   new Date('2027-03-27T00:00:00'), // last chance to pass a pre-step
+  lastStep:  new Date('2027-04-01T00:00:00')  // absolute last chance for the real thing
+};
+
+// 18 systems, each distilled into digestible review chunks (from the USMLE outline)
+const SYSTEMS = [
+  {id:'human-dev', name:'Human Development', emoji:'👶', tint:'--sage-soft', topics:[
+    'Infancy & childhood — normal findings & well care','Adolescence — growth, puberty, screening','Adulthood — preventive care','Older adulthood — aging changes & prevention']},
+  {id:'immune', name:'Immune System', emoji:'🛡️', tint:'--sky-soft', topics:[
+    'Humoral immunodeficiencies (CVID, Bruton, IgA)','Cell-mediated defects (DiGeorge, SCID, WAS)','Complement deficiencies','Phagocyte & NK cell defects','HIV / AIDS & complications','Hypersensitivity reactions (I–IV)','Transplantation & graft-vs-host','Immune drug effects']},
+  {id:'blood', name:'Blood & Lymphoreticular', emoji:'🩸', tint:'--coral-soft', topics:[
+    'Infectious & immunologic disorders','Leukemias, lymphomas, myeloma','Anemias & hemolysis','Cytopenias & polycythemias','Coagulation disorders (hyper/hypo)','Transfusion reactions','Spleen disorders','Drug effects on blood']},
+  {id:'behavioral', name:'Behavioral Health', emoji:'🧠', tint:'--plum-soft', topics:[
+    'Psychotic disorders','Anxiety disorders','Mood disorders','Somatic symptom disorders','Eating & impulse-control disorders','Childhood-onset disorders (ADHD, autism)','Personality disorders','Substance use disorders','Sexual, gender & psychosocial']},
+  {id:'neuro', name:'Nervous System & Special Senses', emoji:'🧬', tint:'--plum-soft', topics:[
+    'CNS infections (meningitis, encephalitis)','Neoplasms (glioblastoma, meningioma)','Cerebrovascular disease & stroke','Spinal cord disorders','Cranial & peripheral nerve disorders','Neurologic pain syndromes','Dementias & degenerative','Neuromuscular & movement disorders','Seizures, headache, sleep','Eye disorders','Ear disorders','Drugs & the nervous system']},
+  {id:'skin', name:'Skin & Subcutaneous', emoji:'🧴', tint:'--coral-soft', topics:[
+    'Bacterial, viral, fungal, parasitic infections','Inflammatory dermatoses (psoriasis, eczema)','Vesiculobullous & urticaria (SJS/TEN)','Neoplasms (BCC, SCC, melanoma)','Hair, nail & gland disorders','Pigment & congenital disorders','Drug reactions']},
+  {id:'msk', name:'Musculoskeletal', emoji:'🦴', tint:'--gold-soft', topics:[
+    'Infectious (osteomyelitis, septic arthritis)','Immunologic (RA, ankylosing, JIA)','Inflammatory (bursitis, tendinitis)','Neoplasms of bone','Metabolic bone (osteoporosis, Paget)','Joint disease (gout, OA)','Trauma (fractures, sprains)','Congenital disorders','Drug effects (statins, steroids)']},
+  {id:'cardio', name:'Cardiovascular', emoji:'❤️', tint:'--coral-soft', topics:[
+    'Endocarditis & myocarditis','Atherosclerosis','Dysrhythmias','Heart failure','Ischemic heart disease (ACS, MI)','Cardiomyopathies','Pericardial disease','Valvular disease','Hypertension','Dyslipidemia','Vascular (aneurysm, PAD, DVT)','Congenital heart disease','Cardiovascular drug effects']},
+  {id:'resp', name:'Respiratory', emoji:'🫁', tint:'--sky-soft', topics:[
+    'Upper airway infections','Lower airway infections & pneumonias','Neoplasms (lung cancers, mesothelioma)','Obstructive disease (asthma, COPD)','Restrictive & interstitial disease','Respiratory failure & PE','Gas exchange disorders','Pleura, mediastinum & chest wall','Trauma & mechanical','Congenital & drug effects']},
+  {id:'gi', name:'Gastrointestinal', emoji:'🍽️', tint:'--gold-soft', topics:[
+    'GI infections','Inflammatory (IBD, celiac)','Neoplasms & polyps','GI bleeding & symptoms','Oral & esophageal disorders','Stomach & intestinal disorders','Liver disease','Biliary disease','Pancreas disorders','Peritoneum & trauma','Congenital disorders','GI drug effects']},
+  {id:'renal', name:'Renal & Urinary', emoji:'💧', tint:'--sky-soft', topics:[
+    'UTIs & pyelonephritis','Glomerular disorders','Tubulointerstitial disease','Neoplasms (RCC, Wilms)','AKI, CKD & metabolic','Stones & renal tubular acidosis','Vascular disorders','Trauma & obstruction','Congenital & drug effects']},
+  {id:'pregnancy', name:'Pregnancy & Puerperium', emoji:'🤰', tint:'--coral-soft', topics:[
+    'Prenatal care & screening','Obstetric complications','Labor & delivery','Puerperium complications','The newborn','Drug effects in pregnancy','Systemic disorders in pregnancy']},
+  {id:'repro-f', name:'Female Reproductive & Breast', emoji:'♀️', tint:'--plum-soft', topics:[
+    'Breast disorders & cancer','Vulvovaginal & STIs','GYN neoplasms (cervix, ovary, uterus)','Fertility & contraception','Menopause','Menstrual & endocrine (PCOS, endometriosis)','Sexual dysfunction','Trauma & congenital','Drug effects']},
+  {id:'repro-m', name:'Male Reproductive', emoji:'🧔', tint:'--sky-soft', topics:[
+    'Infections (epididymitis, prostatitis, STIs)','Neoplasms (prostate, testicular)','Sexual dysfunction','BPH & mechanical (torsion)','Congenital disorders','Drug effects']},
+  {id:'endo', name:'Endocrine', emoji:'🔥', tint:'--gold-soft', topics:[
+    'Diabetes mellitus & complications','Hypoglycemia & islet tumors','Thyroid disorders','Parathyroid disorders','Adrenal disorders','Pituitary disorders','MEN syndromes','Congenital & drug effects']},
+  {id:'multisystem', name:'Multisystem Processes', emoji:'🌐', tint:'--plum-soft', topics:[
+    'Systemic infections','Autoimmune & vasculitis','Paraneoplastic & inherited cancer','Nutrition & vitamins','Toxins & environmental','Bites & stings','Fluid, electrolyte & acid-base','Abuse & multiple trauma','Shock & sepsis','Genetic & metabolic syndromes','Drug effects']},
+  {id:'biostats', name:'Biostatistics & Epidemiology', emoji:'📊', tint:'--sky-soft', topics:[
+    'Epidemiology & population health','Study designs','Measures of association (RR, OR, NNT)','Data distributions','Screening & testing (sens, spec, PPV)','Study interpretation & bias','Evidence-based medicine','Research ethics']},
+  {id:'social', name:'Social Sciences & Ethics', emoji:'⚖️', tint:'--sage-soft', topics:[
+    'Communication & interpersonal skills','Medical ethics & end-of-life','Systems-based practice & safety','Quality improvement','Health policy & economics']}
+];
+const SYS = Object.fromEntries(SYSTEMS.map(s=>[s.id,s]));
+const TOTAL_TOPICS = SYSTEMS.reduce((a,s)=>a+s.topics.length,0);
+
+// Week-by-week plan. Dates are computed from START.
+const WEEKS = [
+  {n:1, phase:'Content Review', systems:['human-dev','biostats'], note:'Gentle start — ease in 🌱'},
+  {n:2, systems:['immune']},
+  {n:3, systems:['blood']},
+  {n:4, systems:['behavioral']},
+  {n:5, systems:['neuro'], part:'Part 1'},
+  {n:6, systems:['neuro'], part:'Part 2'},
+  {n:7, type:'review', note:'Catch-up & review (Weeks 1–6)'},
+  {n:8, systems:['skin']},
+  {n:9, systems:['msk']},
+  {n:10, systems:['cardio'], part:'Part 1'},
+  {n:11, systems:['cardio'], part:'Part 2'},
+  {n:12, systems:['resp']},
+  {n:13, type:'review', note:'Catch-up & review (Weeks 8–12)'},
+  {n:14, systems:['gi'], part:'Part 1'},
+  {n:15, systems:['gi'], part:'Part 2'},
+  {n:16, systems:['renal']},
+  {n:17, systems:['endo']},
+  {n:18, systems:['repro-f','repro-m']},
+  {n:19, systems:['pregnancy']},
+  {n:20, systems:['multisystem']},
+  {n:21, systems:['social'], note:'+ Catch-up & review — first pass done! 🎉'},
+  {n:22, phase:'Practice & Assessments', type:'qbank', note:'Mixed Qbank blocks begin 💪'},
+  {n:23, type:'qbank', milestone:'Baseline NBME'},
+  {n:24, type:'weak'},
+  {n:25, type:'rest', note:'Holiday week — lighter load, rest & recharge 🎄'},
+  {n:26, type:'qbank', milestone:'NBME assessment'},
+  {n:27, type:'weak'},
+  {n:28, type:'qbank', milestone:'NBME assessment'},
+  {n:29, type:'weak', note:'Review & prep for the pre-step'},
+  {n:30, type:'milestone', milestone:'Pre-step by Jan 29 ✅', deadline:true},
+  {n:31, phase:'Final Push', type:'weak', note:'Target weak areas from your pre-step'},
+  {n:32, type:'qbank', milestone:'Full-length practice'},
+  {n:33, type:'qbank', milestone:'Final NBME / UWSA'},
+  {n:34, type:'exam', milestone:'🎯 Take Step 1 — then March is YOURS'}
+];
+
+// Rewards (sponsored by the boyfriend 💛). Italy = finish before March.
+const REWARDS = [
+  {id:'fries', emoji:'🍟', name:'Chick-fil-A fries (on me)', cost:30},
+  {id:'coffee', emoji:'☕', name:'Fancy coffee run', cost:45},
+  {id:'movie', emoji:'🎬', name:'Movie night — your pick', cost:60},
+  {id:'pamper', emoji:'🧖‍♀️', name:'Face-mask & pamper night', cost:90},
+  {id:'dinner', emoji:'🍜', name:'Dinner date, your choice', cost:130},
+  {id:'spa', emoji:'💆‍♀️', name:'Massage / spa afternoon', cost:220},
+  {id:'shop', emoji:'🛍️', name:'A little shopping treat', cost:300},
+  {id:'roadtrip', emoji:'🚗', name:'Weekend road trip', cost:450},
+  {id:'italy', emoji:'🇮🇹', name:'Italy adventure', cost:900, mega:true, note:'Finish & pass Step 1 before March ✨'}
+];
+
+const ENCOURAGEMENTS = [
+  "One block at a time. You've got this. 💛",
+  "\"Dr.\" has a really nice ring to it, huh?",
+  "Every card you review is a patient you'll help one day.",
+  "So proud of you already. — your biggest fan",
+  "Rest is part of the plan too. Breathe.",
+  "Small steps, big dreams. Keep going ✨",
+  "You are so much more capable than one exam.",
+  "March in Italy is calling… 🇮🇹",
+  "You don't have to do it all today. Just the next thing.",
+  "Future you is going to be so grateful for today.",
+  "Hard days are allowed. You're still doing great.",
+  "Look how far you've already come. ✨"
+];
+
+/* ---------- 3. STATE ---------- */
+let state = { name:'future doctor', topics:{}, tasks:{}, redemptions:[], v:1 };
+let db=null, docRef=null, saveTimer=null, remoteApplying=false;
+
+function starsEarned(){
+  let s=0;
+  // content topics
+  for(const k in state.topics){ if(state.topics[k]) s+=2; }
+  // system-complete bonuses
+  for(const sys of SYSTEMS){
+    const all=sys.topics.every((_,i)=>state.topics[sys.id+'::'+i]);
+    if(all && sys.topics.length) s+=10;
+  }
+  // weekly tasks (variable star values)
+  for(const w of WEEKS){
+    genTasks(w).forEach((t,i)=>{ if(state.tasks['w'+w.n+'::'+i]) s+=t.stars; });
+  }
+  return s;
+}
+function starsSpent(){ return state.redemptions.reduce((a,r)=>a+r.cost,0); }
+function starsAvail(){ return starsEarned()-starsSpent(); }
+
+/* ---------- 4. DATE HELPERS ---------- */
+function weekStart(n){ const d=new Date(START); d.setDate(d.getDate()+(n-1)*7); return d; }
+function weekEnd(n){ const d=weekStart(n); d.setDate(d.getDate()+6); return d; }
+function fmtD(d){ return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+function fmtRange(n){ return fmtD(weekStart(n))+' – '+fmtD(weekEnd(n)); }
+function daysUntil(d){ return Math.ceil((d - new Date())/864e5); }
+function currentWeekNum(){
+  const diff=Math.floor((new Date()-START)/(7*864e5))+1;
+  return Math.min(Math.max(diff,1),TOTAL_WEEKS);
+}
+
+/* ---------- 5. TASK GENERATION ---------- */
+function sysNames(w){ return (w.systems||[]).map(id=>SYS[id].name).join(' + '); }
+function genTasks(w){
+  const s=sysNames(w); const p=w.part?' ('+w.part+')':'';
+  if(w.type==='review') return [
+    {label:'🔁 Redo your missed & flagged questions', stars:3},
+    {label:'🃏 Clear your Anki review backlog', stars:3},
+    {label:'📖 Re-read notes on the topics that felt shaky', stars:3},
+    {label:'😌 Take one true rest day — no guilt', stars:3}];
+  if(w.type==='rest') return [
+    {label:'🎄 Lighter week — protect your rest', stars:3},
+    {label:'🃏 Just keep Anki ticking over', stars:3},
+    {label:'🎁 Redeem a reward you have earned', stars:3}];
+  if(w.type==='qbank'){ const t=[
+    {label:'✅ Two mixed, timed UWorld blocks', stars:4},
+    {label:'📖 Read every explanation — right and wrong', stars:4},
+    {label:'🃏 Stay on top of Anki reviews', stars:3}];
+    if(w.milestone) t.push({label:'⭐ '+w.milestone, stars:25}); return t; }
+  if(w.type==='weak') return [
+    {label:'🎯 Attack your weakest 2–3 subjects', stars:4},
+    {label:'✅ Targeted UWorld blocks on those areas', stars:4},
+    {label:'🃏 Make fresh Anki cards for what you miss', stars:3}];
+  if(w.type==='milestone') return [
+    {label:'⭐ '+w.milestone, stars:50},
+    {label:'📝 Log your score & note weak areas', stars:5},
+    {label:'💛 Breathe — this is a checkpoint, not a verdict', stars:3}];
+  if(w.type==='exam') return [
+    {label:'⭐ '+w.milestone, stars:100},
+    {label:'😴 Sleep well the night before', stars:5},
+    {label:'🍀 Trust your prep — you did the work', stars:5}];
+  return [
+    {label:'📺 Watch high-yield videos: '+s+p, stars:3},
+    {label:'🃏 Drill '+s+' Anki cards', stars:3},
+    {label:'📖 Read First Aid / Pathoma: '+s, stars:3},
+    {label:'✅ One '+s+' UWorld block + review', stars:4},
+    {label:'☑️ Tick off '+s+' topics in Review', stars:2}];
+}
+function weekTitle(w){
+  if(w.systems) return sysNames(w)+(w.part?' — '+w.part:'');
+  if(w.type==='review') return 'Catch-up & Review';
+  if(w.type==='rest') return 'Rest & Recharge';
+  if(w.type==='qbank') return w.milestone?('Qbank + '+w.milestone):'Qbank Intensive';
+  if(w.type==='weak') return 'Weak-Area Focus';
+  if(w.type==='milestone'||w.type==='exam') return w.milestone;
+  return 'Study Week';
+}
+
+/* ---------- 6. RENDER: HOME ---------- */
+function renderHome(){
+  const cw=currentWeekNum();
+  const week=WEEKS.find(w=>w.n===cw)||WEEKS[0];
+  const done=Object.values(state.topics).filter(Boolean).length;
+  const pct=Math.round(done/TOTAL_TOPICS*100);
+  const circ=2*Math.PI*66, off=circ*(1-pct/100);
+
+  // kind pace status (content phase = weeks 1–21)
+  const expected=Math.min((cw-1)/21,1)*100;
+  let status;
+  if(pct>=expected+6) status=['status-ahead','🚀',"You're ahead of pace — incredible work!"];
+  else if(pct>=expected-8) status=['status-ontrack','💛',"Right on track. Keep this rhythm."];
+  else status=['status-behind','🌤️',"A little behind pace — totally fixable, and there's buffer built in. Pick one topic and start."];
+
+  // next milestone countdown
+  let nextDl, nextLab;
+  const dNow=new Date();
+  if(dNow<DEADLINES.preStep){ nextDl=DEADLINES.preStep; nextLab='until pre-step deadline'; }
+  else if(dNow<DEADLINES.soft){ nextDl=DEADLINES.soft; nextLab='until your target exam date'; }
+  else if(dNow<DEADLINES.lastStep){ nextDl=DEADLINES.lastStep; nextLab='until the final deadline'; }
+  else { nextDl=null; }
+  const daysLeft=nextDl?daysUntil(nextDl):0;
+
+  const enc=ENCOURAGEMENTS[Math.floor(Date.now()/86400000)%ENCOURAGEMENTS.length];
+  const tasks=genTasks(week);
+
+  document.getElementById('view-home').innerHTML=`
+    <div class="hero">
+      <div>
+        <div class="hello">Week ${cw} of ${TOTAL_WEEKS} · ${new Date().toLocaleDateString('en-US',{weekday:'long'})}</div>
+        <h1>Hey, <span class="editname" id="editName">${state.name}</span> ✨</h1>
+        <div class="encourage">${enc}</div>
+      </div>
+      <div class="ring-wrap">
+        <div class="ring">
+          <svg width="150" height="150">
+            <circle cx="75" cy="75" r="66" fill="none" stroke="var(--line)" stroke-width="14"/>
+            <circle cx="75" cy="75" r="66" fill="none" stroke="url(#g)" stroke-width="14"
+              stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${off}"/>
+            <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#57C88E"/><stop offset="1" stop-color="#1E7A50"/>
+            </linearGradient></defs>
+          </svg>
+          <div class="pct"><b>${pct}%</b><span>content</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat coral"><div class="big">${done}</div><div class="lab">Topics reviewed</div></div>
+      <div class="stat plum"><div class="big">${done>=TOTAL_TOPICS?'✓':(TOTAL_TOPICS-done)}</div><div class="lab">${done>=TOTAL_TOPICS?'All done!':'Topics to go'}</div></div>
+      <div class="stat sage"><div class="big">${daysLeft>0?daysLeft:'—'}</div><div class="lab">Days ${nextLab||''}</div></div>
+      <div class="stat gold"><div class="big">${starsAvail()}</div><div class="lab">Stars to spend</div></div>
+    </div>
+
+    <div class="status-line ${status[0]}"><span style="font-size:20px">${status[1]}</span> ${status[2]}</div>
+
+    <div class="card" style="margin-top:18px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>
+          <div class="eyebrow">This week's focus</div>
+          <h2 style="font-family:'Fraunces';font-size:22px;margin:6px 0 2px">${weekTitle(week)}</h2>
+          <div class="muted" style="font-weight:700;font-size:13.5px">${fmtRange(week.n)}${week.note?' · '+week.note:''}</div>
+        </div>
+        <button class="pill" style="background:var(--plum-soft);color:var(--plum)" data-goto="schedule">See full schedule →</button>
+      </div>
+      <div style="margin-top:14px">
+        ${tasks.map((t,i)=>{const k='w'+week.n+'::'+i;const d=state.tasks[k];return `
+          <div class="task ${d?'done':''}" data-task="${k}">
+            <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></div>
+            <div class="label">${t.label}</div>
+            <div class="rew">+${t.stars}⭐</div>
+          </div>`;}).join('')}
+      </div>
+    </div>
+
+    <div class="italy">
+      <div class="big">🇮🇹</div>
+      <div>
+        <div class="t">Finish & pass before March…</div>
+        <div class="s">…and the whole month is yours to relax. A little something special might be waiting ✨</div>
+      </div>
+    </div>
+
+    <div class="footer-note">Made with love, just for you 💛 · Your rewards are sponsored by your boyfriend</div>
+  `;
+  document.getElementById('editName').onclick=openNameEdit;
+}
+
+/* ---------- 7. RENDER: SCHEDULE ---------- */
+function renderSchedule(){
+  const cw=currentWeekNum();
+  const tl=[
+    ['soft','Target: exam by', DEADLINES.soft, 'so March is free'],
+    ['d1','Pre-step by', DEADLINES.preStep, 'first hard deadline'],
+    ['d2','Last pre-step pass', DEADLINES.lastPre, 'backstop'],
+    ['d3','Final Step deadline', DEADLINES.lastStep, 'absolute last']
+  ];
+  let openWeeks='';
+  let lastPhase='';
+  for(const w of WEEKS){
+    if(w.phase && w.phase!==lastPhase){
+      lastPhase=w.phase;
+      const em=w.phase==='Content Review'?'📖':w.phase==='Practice & Assessments'?'💪':'🏁';
+      openWeeks+=`<div class="phase-div"><span class="em">${em}</span><h3>${w.phase}</h3><div class="rule"></div></div>`;
+    }
+    const isNow=w.n===cw;
+    const tasks=genTasks(w);
+    const chips=(w.systems||[]).map(id=>{const s=SYS[id];return `<span class="syschip" style="background:var(${s.tint});color:var(--ink)">${s.emoji} ${s.name}</span>`;}).join('');
+    openWeeks+=`
+      <div class="wk ${isNow?'current open':''} ${w.deadline?'deadline':''}" data-wk="${w.n}">
+        <div class="wk-head" data-wktoggle="${w.n}">
+          <div class="wk-num"><small>WK</small><b>${w.n}</b></div>
+          <div class="wt">
+            <div class="tt">${weekTitle(w)}</div>
+            <div class="dd">${fmtRange(w.n)}${w.note?' · '+w.note:''}</div>
+            ${chips?`<div class="chip-row">${chips}</div>`:''}
+          </div>
+          ${isNow?'<span class="now-badge">THIS WEEK</span>':''}
+          <span class="chev">›</span>
+        </div>
+        <div class="wk-body">
+          ${tasks.map((t,i)=>{const k='w'+w.n+'::'+i;const d=state.tasks[k];return `
+            <div class="task ${d?'done':''}" data-task="${k}">
+              <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></div>
+              <div class="label">${t.label}</div>
+              <div class="rew">+${t.stars}⭐</div>
+            </div>`;}).join('')}
+        </div>
+      </div>`;
+  }
+
+  document.getElementById('view-schedule').innerHTML=`
+    <div class="page-head"><div class="eyebrow">The plan</div><h2>Your schedule</h2>
+      <p>A slow, doable build to exam day — with rest weeks and buffer baked in. Tap any week to see its tasks.</p></div>
+    <div class="timeline">
+      ${tl.map(([c,lab,d,sub])=>{const dl=daysUntil(d);return `
+        <div class="tl ${c}">
+          <div class="lab">${lab}</div>
+          <div class="date">${d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
+          <div class="cd">${dl>0?dl+' days':'passed'}</div>
+          <div class="muted" style="font-size:11.5px;font-weight:700;margin-top:2px">${sub}</div>
+        </div>`;}).join('')}
+    </div>
+    ${openWeeks}
+    <div class="footer-note">Dates are a guide, not a cage. Shift them if life happens 💛</div>
+  `;
+}
+
+/* ---------- 8. RENDER: REVIEW ---------- */
+function renderReview(){
+  const done=Object.values(state.topics).filter(Boolean).length;
+  document.getElementById('view-review').innerHTML=`
+    <div class="page-head"><div class="eyebrow">Content review</div><h2>Every system, checked off</h2>
+      <p>This is your accountability home base. Tick a topic once you've truly reviewed it — each one is +2⭐, and finishing a whole system is a +10⭐ bonus.</p></div>
+    <div class="card" style="margin-bottom:18px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <b style="font-family:'Fraunces';font-size:17px">Overall progress</b>
+        <b style="color:var(--coral-deep)">${done} / ${TOTAL_TOPICS}</b>
+      </div>
+      <div class="bar"><i style="width:${done/TOTAL_TOPICS*100}%"></i></div>
+    </div>
+    ${SYSTEMS.map(s=>{
+      const d=s.topics.filter((_,i)=>state.topics[s.id+'::'+i]).length;
+      const all=d===s.topics.length;
+      return `
+      <div class="sys ${all?'':''}" data-sys="${s.id}">
+        <div class="sys-head" data-systoggle="${s.id}">
+          <div class="sys-emoji" style="background:var(${s.tint})">${s.emoji}</div>
+          <div class="info">
+            <div class="title">${s.name}</div>
+            <div class="meta">${d} of ${s.topics.length} topics</div>
+            <div class="barwrap"><div class="bar ${all?'sage':''}"><i style="width:${d/s.topics.length*100}%"></i></div></div>
+          </div>
+          ${all?'<span class="sys-done-badge">Done ✓</span>':''}
+          <span class="chev">›</span>
+        </div>
+        <div class="sys-body">
+          <button class="markall" data-markall="${s.id}">${all?'Uncheck all':'Mark all reviewed'}</button>
+          ${s.topics.map((t,i)=>{const k=s.id+'::'+i;const c=state.topics[k];return `
+            <div class="task ${c?'done':''}" data-topic="${k}">
+              <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></div>
+              <div class="label">${t}</div>
+            </div>`;}).join('')}
+        </div>
+      </div>`;}).join('')}
+  `;
+}
+
+/* ---------- 9. RENDER: RESOURCES ---------- */
+const RESOURCES=[
+  {group:'📺 Videos', items:[
+    {e:'💊', n:'Sketchy', d:'Micro · Pharm · Path', tint:'--coral-soft', url:'https://www.sketchy.com'},
+    {e:'📗', n:'Pathoma', d:'Fundamentals of pathology', tint:'--plum-soft', url:'https://www.pathoma.com'},
+    {e:'🎥', n:'Boards & Beyond', d:'Full Step 1 video course', tint:'--sky-soft', url:'https://www.boardsbeyond.com'},
+    {e:'🩺', n:'Dirty Medicine', d:'High-yield YouTube', tint:'--sage-soft', url:'https://www.youtube.com/@DirtyMedicine'}]},
+  {group:'🃏 Anki', items:[
+    {e:'👑', n:'The AnKing', d:'AnKing Step deck & guides', tint:'--gold-soft', url:'https://www.theanking.com'},
+    {e:'⬇️', n:'AnkiWeb', d:'Sync & download Anki', tint:'--plum-soft', url:'https://apps.ankiweb.net'}]},
+  {group:'✅ Question banks', items:[
+    {e:'🎯', n:'UWorld', d:'The Qbank', tint:'--coral-soft', url:'https://www.uworld.com/medical/usmle-step-1/'},
+    {e:'📚', n:'AMBOSS', d:'Qbank + library', tint:'--sky-soft', url:'https://www.amboss.com'}]},
+  {group:'📝 Practice exams', items:[
+    {e:'🧪', n:'NBME Self-Assessments', d:'Official practice tests', tint:'--sage-soft', url:'https://www.nbme.org/examinees/self-assessments'},
+    {e:'🆓', n:'Free 120', d:'Official practice questions', tint:'--gold-soft', url:'https://www.usmle.org/prepare-your-exam'},
+    {e:'📊', n:'UWSA 1 & 2', d:'UWorld self-assessments', tint:'--coral-soft', url:'https://www.uworld.com/medical/usmle-step-1/'}]},
+  {group:'📖 Reference', items:[
+    {e:'📕', n:'First Aid', d:'The Step 1 bible', tint:'--coral-soft', url:'https://www.firstaidteam.com'},
+    {e:'✍️', n:'Mehlman PDFs', d:'Free high-yield notes', tint:'--plum-soft', url:'https://mehlmanmedical.com'},
+    {e:'🏛️', n:'USMLE.org', d:'Official exam info & dates', tint:'--sky-soft', url:'https://www.usmle.org'}]}
+];
+function renderResources(){
+  document.getElementById('view-resources').innerHTML=`
+    <div class="page-head"><div class="eyebrow">Everything in one place</div><h2>Your resources</h2>
+      <p>All your go-to links, so you never lose 20 minutes just finding where to start.</p></div>
+    ${RESOURCES.map(g=>`
+      <div class="res-group">
+        <h3>${g.group}</h3>
+        <div class="res-grid">
+          ${g.items.map(r=>`
+            <a class="res" href="${r.url}" target="_blank" rel="noopener">
+              <div class="re" style="background:var(${r.tint})">${r.e}</div>
+              <div><div class="rn">${r.n}</div><div class="rd">${r.d}</div></div>
+              <span class="arrow">↗</span>
+            </a>`).join('')}
+        </div>
+      </div>`).join('')}
+    <div class="footer-note">Log in with your own accounts — these just take you to the front door 🔑</div>
+  `;
+}
+
+/* ---------- 10. RENDER: REWARDS ---------- */
+function renderRewards(){
+  const avail=starsAvail(), earned=starsEarned();
+  document.getElementById('view-rewards').innerHTML=`
+    <div class="page-head"><div class="eyebrow">You earned these</div><h2>Rewards</h2>
+      <p>Every topic and task earns stars. Spend them whenever you like — you deserve the treat.</p></div>
+    <div class="jar">
+      <div class="big"><span class="s">⭐</span> ${avail}</div>
+      <div class="sub">stars ready to spend</div>
+      <div class="earned">${earned} earned all-time · ${starsSpent()} spent</div>
+    </div>
+    <div class="rewards-grid">
+      ${REWARDS.map(r=>{
+        const can=avail>=r.cost;
+        const prog=Math.min(100,Math.round(avail/r.cost*100));
+        return `
+        <div class="reward ${r.mega?'mega':''}">
+          <div class="rtop"><div class="remoji">${r.emoji}</div>
+            <div><div class="rname">${r.name}</div><div class="rcost">${r.cost} ⭐</div></div></div>
+          ${r.note?`<div class="prog" style="color:var(--coral-deep)">${r.note}</div>`:''}
+          ${can?`<button class="rbtn ok" data-redeem="${r.id}">Redeem 🎉</button>`
+                :`<button class="rbtn no" disabled>${r.cost-avail} more to go</button>
+                  <div class="bar gold" style="margin-top:-4px"><i style="width:${prog}%"></i></div>`}
+        </div>`;}).join('')}
+    </div>
+    ${state.redemptions.length?`
+      <div class="history">
+        <h3 style="font-family:'Fraunces';font-size:18px;margin:0 0 6px">Redeemed 🧾</h3>
+        <div class="card">
+          ${state.redemptions.slice().reverse().map((r,ri)=>{
+            const idx=state.redemptions.length-1-ri;
+            return `<div class="hitem"><span class="he">${r.emoji}</span>
+              <div><div>${r.name}</div><div class="hd">${new Date(r.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${r.cost}⭐</div></div>
+              <button class="undo" data-undo="${idx}">undo</button></div>`;}).join('')}
+        </div>
+      </div>`:''}
+    <div class="footer-note">Sponsored with love by your boyfriend 💛</div>
+  `;
+}
+
+/* ---------- 11. INTERACTIONS ---------- */
+function toggle(store,key){ state[store][key]=!state[store][key]; if(!state[store][key]) delete state[store][key]; save(); }
+
+document.addEventListener('click',e=>{
+  const nav=e.target.closest('[data-view]'); if(nav){ switchView(nav.dataset.view); return; }
+  const goto=e.target.closest('[data-goto]'); if(goto){ switchView(goto.dataset.goto); return; }
+
+  const task=e.target.closest('[data-task]');
+  if(task){ toggle('tasks',task.dataset.task); pulseStars(); renderActive(); return; }
+
+  const topic=e.target.closest('[data-topic]');
+  if(topic){ toggle('topics',topic.dataset.topic); pulseStars(); renderReview(); return; }
+
+  const st=e.target.closest('[data-systoggle]');
+  if(st){ document.querySelector('[data-sys="'+st.dataset.systoggle+'"]').classList.toggle('open'); return; }
+  const wt=e.target.closest('[data-wktoggle]');
+  if(wt){ document.querySelector('[data-wk="'+wt.dataset.wktoggle+'"]').classList.toggle('open'); return; }
+
+  const ma=e.target.closest('[data-markall]');
+  if(ma){ const s=SYS[ma.dataset.markall];
+    const all=s.topics.every((_,i)=>state.topics[s.id+'::'+i]);
+    s.topics.forEach((_,i)=>{const k=s.id+'::'+i; if(all) delete state.topics[k]; else state.topics[k]=true;});
+    save(); pulseStars(); renderReview(); return; }
+
+  const rd=e.target.closest('[data-redeem]');
+  if(rd){ redeem(rd.dataset.redeem); return; }
+  const un=e.target.closest('[data-undo]');
+  if(un){ state.redemptions.splice(+un.dataset.undo,1); save(); renderRewards(); toast('Refunded ↺'); return; }
+
+  if(e.target.closest('#openSettings')) openSettings();
+});
+
+function redeem(id){
+  const r=REWARDS.find(x=>x.id===id); if(!r||starsAvail()<r.cost) return;
+  state.redemptions.push({id:r.id,emoji:r.emoji,name:r.name,cost:r.cost,date:Date.now()});
+  save(); confetti(); renderRewards(); toast(r.emoji+' Enjoy your '+r.name.toLowerCase()+'!');
+}
+
+function switchView(v){
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+  document.querySelectorAll('.view').forEach(s=>s.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  ({home:renderHome,schedule:renderSchedule,review:renderReview,resources:renderResources,rewards:renderRewards}[v])();
+}
+function currentView(){ return document.querySelector('.nav-btn.active').dataset.view; }
+function renderActive(){ ({home:renderHome,schedule:renderSchedule,review:renderReview,resources:renderResources,rewards:renderRewards}[currentView()])(); }
+
+function pulseStars(){ const c=document.getElementById('sidebarStars'); c.classList.remove('pulse'); void c.offsetWidth; c.classList.add('pulse'); updateStarChip(); }
+function updateStarChip(){ document.querySelector('#sidebarStars .n').textContent=starsAvail(); }
+
+/* ---------- 12. MODALS ---------- */
+function showModal(html){ document.getElementById('modalContent').innerHTML=html; document.getElementById('modalBg').classList.add('show'); document.body.style.overflow='hidden'; }
+function closeModal(){ document.getElementById('modalBg').classList.remove('show'); document.body.style.overflow=''; }
+document.getElementById('modalBg').addEventListener('click',e=>{ if(e.target.id==='modalBg') closeModal(); });
+
+function openNameEdit(){
+  showModal(`<h3>What should I call you?</h3><p>Your name lights up the home screen 💛</p>
+    <input id="nmeInput" value="${state.name.replace(/"/g,'&quot;')}" maxlength="24" placeholder="e.g. Bethany, or future Dr. ___"/>
+    <div class="row"><button class="btn-ghost" onclick="closeModal()">Cancel</button>
+    <button class="btn-primary" onclick="saveName()">Save</button></div>`);
+  setTimeout(()=>document.getElementById('nmeInput').focus(),50);
+}
+function saveName(){ const v=document.getElementById('nmeInput').value.trim(); if(v) state.name=v; save(); closeModal(); renderHome(); }
+
+function openSettings(){
+  const synced=isFirebaseOn();
+  showModal(`<h3>Settings</h3>
+    <p>${synced?'☁️ Synced across your devices':'💾 Saving on this device'}</p>
+    <div class="row" style="margin-bottom:12px"><button class="btn-ghost" onclick="openNameEdit()">Change name</button></div>
+    <div class="row"><button class="btn-ghost" onclick="closeModal()">Close</button>
+    <button class="btn-primary" style="background:var(--coral-deep)" onclick="confirmReset()">Reset progress</button></div>`);
+}
+function confirmReset(){
+  showModal(`<h3>Start fresh?</h3><p>This clears every check, star and reward. It can't be undone.</p>
+    <div class="row"><button class="btn-ghost" onclick="closeModal()">Keep my progress</button>
+    <button class="btn-primary" style="background:var(--coral-deep)" onclick="doReset()">Yes, reset</button></div>`);
+}
+function doReset(){ state={name:state.name,topics:{},tasks:{},redemptions:[],v:1}; save(); closeModal(); switchView('home'); toast('Fresh start ✨'); }
+
+/* ---------- 13. TOAST + CONFETTI ---------- */
+let toastTimer;
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600); }
+function confetti(){
+  const colors=['#2FA36B','#5BB98C','#E9A02F','#2E9E9A','#4C9BD6'];
+  for(let i=0;i<44;i++){ const c=document.createElement('div'); c.className='confetti';
+    c.style.left=Math.random()*100+'vw'; c.style.background=colors[i%colors.length];
+    c.style.animation=`fall ${1.4+Math.random()*1.4}s linear ${Math.random()*.4}s forwards`;
+    c.style.opacity=.9; document.body.appendChild(c); setTimeout(()=>c.remove(),3200); }
+}
+
+/* ---------- 14. STORAGE (Firebase or localStorage) ---------- */
+function isFirebaseOn(){ return FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.includes('YOUR_'); }
+const LS_KEY='oneStepV1';
+
+function save(){
+  updateStarChip();
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    if(docRef){ if(!remoteApplying) docRef.set(state).catch(()=>{}); }
+    else { try{ localStorage.setItem(LS_KEY,JSON.stringify(state)); }catch(e){} }
+  },400);
+}
+function loadLocal(){ try{ const r=localStorage.getItem(LS_KEY); if(r) state=Object.assign(state,JSON.parse(r)); }catch(e){} }
+
+function initStorage(){
+  if(isFirebaseOn()){
+    try{
+      firebase.initializeApp(FIREBASE_CONFIG);
+      db=firebase.firestore();
+      try{ db.enablePersistence({synchronizeTabs:true}); }catch(e){}
+      docRef=db.collection(DOC_PATH.collection).doc(DOC_PATH.doc);
+      docRef.onSnapshot(snap=>{
+        if(snap.exists){ remoteApplying=true; state=Object.assign({name:'future doctor',topics:{},tasks:{},redemptions:[],v:1},snap.data()); remoteApplying=false; updateStarChip(); renderActive(); }
+        else { docRef.set(state).catch(()=>{}); }
+      },err=>{ console.warn('Firestore error, using local:',err); docRef=null; loadLocal(); boot(); });
+      return true;
+    }catch(e){ console.warn('Firebase init failed, using local:',e); docRef=null; }
+  }
+  loadLocal();
+  return false;
+}
+function boot(){ updateStarChip(); renderHome(); }
+
+/* ---------- 15. GO ---------- */
+initStorage();
+boot();
+</script>
+</body>
+</html>
