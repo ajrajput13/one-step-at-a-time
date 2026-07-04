@@ -66,6 +66,7 @@
   ::selection{background:var(--coral-soft)}
 
   .app{display:flex;min-height:100vh}
+  .mtopbar{display:none}
   .sidebar{width:230px;flex-shrink:0;padding:26px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px}
   .brand{display:flex;align-items:center;gap:11px;padding:6px 8px 20px}
   .brand .logo{color:var(--coral-deep);display:flex}
@@ -264,7 +265,7 @@
   .reward .remoji{font-size:27px}
   .reward .rname{font-weight:800;font-size:14.5px;line-height:1.2}
   .reward .rcost{font-weight:800;color:var(--star);font-size:13px}
-  .reward .rbadge{position:absolute;top:12px;right:12px;font-size:9.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--plum);background:var(--plum-soft);padding:3px 7px;border-radius:999px}
+  .reward .rtag{color:var(--plum);font-weight:800;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;margin-left:5px;white-space:nowrap}
   .reward .rbtn{margin-top:2px;padding:10px;border-radius:11px;font-weight:800;font-size:14px;transition:.15s;text-align:center}
   .rbtn.ok{background:var(--coral);color:#fff} .rbtn.ok:hover{background:var(--coral-deep)}
   .rbtn.no{background:var(--line);color:var(--faint);cursor:default}
@@ -306,7 +307,11 @@
     .nav-btn{flex-direction:column;gap:3px;padding:7px 2px;font-size:10px;flex:1;border-radius:12px;text-align:center}
     .nav-btn .ic{font-size:19px}
     .nav-btn.active{background:var(--coral-soft)}
-    .main{padding:22px 16px 96px;max-width:100%}
+    .main{padding:70px 16px 96px;max-width:100%}
+    .mtopbar{display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;z-index:100;padding:calc(8px + env(safe-area-inset-top)) 16px 8px;background:var(--surface);box-shadow:0 3px 16px rgba(30,90,60,.10)}
+    .mtopbar .mstars{display:flex;align-items:center;gap:6px;font-weight:800;color:var(--star);font-size:16px;background:var(--gold-soft);padding:7px 13px;border-radius:999px}
+    .mtopbar .mtb-actions{display:flex;gap:8px}
+    .mtopbar .mtb-actions button{width:40px;height:40px;border-radius:12px;background:var(--surface-2);font-size:18px;display:flex;align-items:center;justify-content:center}
     .hero{grid-template-columns:1fr;text-align:center;padding:24px 20px}
     .hero h1{font-size:28px} .ring-wrap{margin:0 auto} .hero::after{display:none}
     .stat-row{grid-template-columns:repeat(2,1fr)}
@@ -319,6 +324,13 @@
 </style>
 </head>
 <body>
+<div class="mtopbar">
+  <div class="mstars">⭐ <span id="mStars">0</span></div>
+  <div class="mtb-actions">
+    <button class="js-theme" id="themeBtnM" aria-label="Toggle dark mode">🌙</button>
+    <button class="js-settings" aria-label="Settings">⚙︎</button>
+  </div>
+</div>
 <div class="app">
   <aside class="sidebar">
     <div class="brand">
@@ -343,8 +355,8 @@
     <button class="nav-btn" data-view="rewards"><span class="ic">🎁</span> Rewards</button>
     <div class="nav-spacer"></div>
     <div class="star-chip" id="sidebarStars"><span>⭐</span><span class="n">0</span><span>stars</span></div>
-    <button class="side-btn" id="themeBtn">🌙 Dark mode</button>
-    <button class="side-btn" id="openSettings">⚙︎ Settings</button>
+    <button class="side-btn js-theme" id="themeBtn">🌙 Dark mode</button>
+    <button class="side-btn js-settings" id="openSettings">⚙︎ Settings</button>
   </aside>
   <main class="main">
     <section class="view active" id="view-home"></section>
@@ -883,9 +895,8 @@ function renderRewards(){
         else if(can) btn=`<button class="rbtn ok" data-redeem="${r.id}">Redeem 🎉</button>`;
         else btn=`<div class="rbtn no">${r.cost-avail} more to go</div><div class="bar gold" style="margin-top:6px"><i style="width:${prog}%"></i></div>`;
         return `<div class="reward ${r.tier==='mega'?'mega':''}">
-          ${r.rep?'<span class="rbadge">repeatable</span>':''}
           <div class="rtop"><div class="remoji">${r.emoji}</div>
-            <div><div class="rname">${r.name}</div><div class="rcost">${r.cost} ⭐</div></div></div>
+            <div><div class="rname">${r.name}</div><div class="rcost">${r.cost} ⭐${r.rep?'<span class="rtag">· repeatable</span>':''}</div></div></div>
           ${r.note?`<div class="note">${r.note}</div>`:''}${btn}</div>`;}).join('')}
     </div></div>`;
   }
@@ -944,8 +955,8 @@ document.addEventListener('click',e=>{
   const jr=e.target.closest('[data-jres]'); if(jr){ const m=state.missing.find(x=>x.id===jr.dataset.jres); if(m){ m.resolved=!m.resolved; save(); renderJournal(); if(m.resolved) toast('Conquered 💪'); } return; }
   const jd=e.target.closest('[data-jdel]'); if(jd){ state.missing=state.missing.filter(x=>x.id!==jd.dataset.jdel); save(); renderJournal(); return; }
 
-  if(e.target.closest('#openSettings')) openSettings();
-  if(e.target.closest('#themeBtn')) toggleTheme();
+  if(e.target.closest('.js-settings')) openSettings();
+  if(e.target.closest('.js-theme')) toggleTheme();
 });
 
 function addMissing(){
@@ -971,10 +982,10 @@ function renderView(v){ ({home:renderHome,schedule:renderSchedule,review:renderR
 function currentView(){ return document.querySelector('.nav-btn.active').dataset.view; }
 function renderActive(){ renderView(currentView()); }
 function pulseStars(){ const c=document.getElementById('sidebarStars'); c.classList.remove('pulse'); void c.offsetWidth; c.classList.add('pulse'); updateStarChip(); }
-function updateStarChip(){ document.querySelector('#sidebarStars .n').textContent=starsAvail(); }
+function updateStarChip(){ const n=starsAvail(); const d=document.querySelector('#sidebarStars .n'); if(d)d.textContent=n; const m=document.getElementById('mStars'); if(m)m.textContent=n; }
 
 /* ---- theme ---- */
-function applyTheme(){ document.documentElement.dataset.theme=state.dark?'dark':''; const b=document.getElementById('themeBtn'); if(b) b.textContent=state.dark?'☀️ Light mode':'🌙 Dark mode'; }
+function applyTheme(){ document.documentElement.dataset.theme=state.dark?'dark':''; const b=document.getElementById('themeBtn'); if(b) b.textContent=state.dark?'☀️ Light mode':'🌙 Dark mode'; const m=document.getElementById('themeBtnM'); if(m) m.textContent=state.dark?'☀️':'🌙'; }
 function toggleTheme(){ state.dark=!state.dark; applyTheme(); save(); }
 
 /* ---- modals ---- */
