@@ -224,9 +224,9 @@
   .jadd input,.jadd textarea{width:100%;padding:12px 14px;border-radius:12px;border:2px solid var(--line-2);background:var(--surface-2);color:var(--ink);outline:none;margin-bottom:10px;resize:none}
   .jadd input:focus,.jadd textarea:focus{border-color:var(--coral)}
   .jadd .jbtn{background:var(--coral);color:#fff;font-weight:800;padding:11px 20px;border-radius:12px;float:right}
-  .jentry{background:var(--paper);border-radius:var(--r-sm);box-shadow:var(--shadow-sm);padding:16px 18px 16px 20px;margin-bottom:12px;position:relative;border-left:4px solid var(--gold);background-image:repeating-linear-gradient(var(--paper) 0 30px,var(--line) 30px 31px)}
+  .jentry{background:var(--surface);border-radius:var(--r-sm);box-shadow:var(--shadow-sm);padding:16px 18px;margin-bottom:12px;position:relative;border-left:4px solid var(--sage)}
   .jentry.resolved{border-left-color:var(--sage);opacity:.72}
-  .jentry .jtext{font-family:'Caveat';font-size:23px;font-weight:700;line-height:1.25;color:var(--ink)}
+  .jentry .jtext{font-size:16.5px;font-weight:700;line-height:1.4;color:var(--ink)}
   .jentry.resolved .jtext{text-decoration:line-through}
   .jentry .jnote{font-size:13.5px;color:var(--muted);font-weight:600;margin-top:4px}
   .jentry .jdate{font-size:11px;color:var(--faint);font-weight:800;margin-top:8px;letter-spacing:.03em}
@@ -390,9 +390,9 @@ const FIREBASE_CONFIG = {
 const DOC_PATH = { collection: "usmleTracker", doc: "shared" };
 
 /* ---- study config ---- */
-const START = new Date('2026-07-19T00:00:00');   // study start (Sunday)
-const TOTAL_WEEKS = 32;
-const CONTENT_WEEKS = 19;
+const START = new Date('2026-09-13T00:00:00');   // study start (Sunday) — restarted
+const TOTAL_WEEKS = 24;
+const CONTENT_WEEKS = 16;
 const TOPIC_STAR = 5, SYS_BONUS = 25;
 const DEADLINES = {
   soft:     new Date('2027-02-28T00:00:00'),
@@ -402,61 +402,53 @@ const DEADLINES = {
 };
 
 const SYSTEMS = [
-  {id:'human-dev', name:'Human Development', emoji:'👶', tint:'--sage-soft', topics:['Infancy & childhood — normal findings & well care','Adolescence — growth, puberty, screening','Adulthood — preventive care','Older adulthood — aging changes & prevention']},
-  {id:'immune', name:'Immune System', emoji:'🛡️', tint:'--sky-soft', topics:['Humoral immunodeficiencies (CVID, Bruton, IgA)','Cell-mediated defects (DiGeorge, SCID, WAS)','Complement deficiencies','Phagocyte & NK cell defects','HIV / AIDS & complications','Hypersensitivity reactions (I–IV)','Transplantation & graft-vs-host','Immune drug effects']},
-  {id:'blood', name:'Blood & Lymphoreticular', emoji:'🩸', tint:'--coral-soft', topics:['Infectious & immunologic disorders','Leukemias, lymphomas, myeloma','Anemias & hemolysis','Cytopenias & polycythemias','Coagulation disorders (hyper/hypo)','Transfusion reactions','Spleen disorders','Drug effects on blood']},
-  {id:'behavioral', name:'Behavioral Health', emoji:'🧠', tint:'--plum-soft', topics:['Psychotic disorders','Anxiety disorders','Mood disorders','Somatic symptom disorders','Eating & impulse-control disorders','Childhood-onset disorders (ADHD, autism)','Personality disorders','Substance use disorders','Sexual, gender & psychosocial']},
-  {id:'neuro', name:'Nervous System & Special Senses', emoji:'🧬', tint:'--plum-soft', topics:['CNS infections (meningitis, encephalitis)','Neoplasms (glioblastoma, meningioma)','Cerebrovascular disease & stroke','Spinal cord disorders','Cranial & peripheral nerve disorders','Neurologic pain syndromes','Dementias & degenerative','Neuromuscular & movement disorders','Seizures, headache, sleep','Eye disorders','Ear disorders','Drugs & the nervous system']},
-  {id:'skin', name:'Skin & Subcutaneous', emoji:'🧴', tint:'--coral-soft', topics:['Bacterial, viral, fungal, parasitic infections','Inflammatory dermatoses (psoriasis, eczema)','Vesiculobullous & urticaria (SJS/TEN)','Neoplasms (BCC, SCC, melanoma)','Hair, nail & gland disorders','Pigment & congenital disorders','Drug reactions']},
-  {id:'msk', name:'Musculoskeletal', emoji:'🦴', tint:'--gold-soft', topics:['Infectious (osteomyelitis, septic arthritis)','Immunologic (RA, ankylosing, JIA)','Inflammatory (bursitis, tendinitis)','Neoplasms of bone','Metabolic bone (osteoporosis, Paget)','Joint disease (gout, OA)','Trauma (fractures, sprains)','Congenital disorders','Drug effects (statins, steroids)']},
-  {id:'cardio', name:'Cardiovascular', emoji:'❤️', tint:'--coral-soft', topics:['Endocarditis & myocarditis','Atherosclerosis','Dysrhythmias','Heart failure','Ischemic heart disease (ACS, MI)','Cardiomyopathies','Pericardial disease','Valvular disease','Hypertension','Dyslipidemia','Vascular (aneurysm, PAD, DVT)','Congenital heart disease','Cardiovascular drug effects']},
-  {id:'resp', name:'Respiratory', emoji:'🫁', tint:'--sky-soft', topics:['Upper airway infections','Lower airway infections & pneumonias','Neoplasms (lung cancers, mesothelioma)','Obstructive disease (asthma, COPD)','Restrictive & interstitial disease','Respiratory failure & PE','Gas exchange disorders','Pleura, mediastinum & chest wall','Trauma & mechanical','Congenital & drug effects']},
-  {id:'gi', name:'Gastrointestinal', emoji:'🍽️', tint:'--gold-soft', topics:['GI infections','Inflammatory (IBD, celiac)','Neoplasms & polyps','GI bleeding & symptoms','Oral & esophageal disorders','Stomach & intestinal disorders','Liver disease','Biliary disease','Pancreas disorders','Peritoneum & trauma','Congenital disorders','GI drug effects']},
-  {id:'renal', name:'Renal & Urinary', emoji:'💧', tint:'--sky-soft', topics:['UTIs & pyelonephritis','Glomerular disorders','Tubulointerstitial disease','Neoplasms (RCC, Wilms)','AKI, CKD & metabolic','Stones & renal tubular acidosis','Vascular disorders','Trauma & obstruction','Congenital & drug effects']},
-  {id:'pregnancy', name:'Pregnancy & Puerperium', emoji:'🤰', tint:'--coral-soft', topics:['Prenatal care & screening','Obstetric complications','Labor & delivery','Puerperium complications','The newborn','Drug effects in pregnancy','Systemic disorders in pregnancy']},
-  {id:'repro-f', name:'Female Reproductive & Breast', emoji:'♀️', tint:'--plum-soft', topics:['Breast disorders & cancer','Vulvovaginal & STIs','GYN neoplasms (cervix, ovary, uterus)','Fertility & contraception','Menopause','Menstrual & endocrine (PCOS, endometriosis)','Sexual dysfunction','Trauma & congenital','Drug effects']},
-  {id:'repro-m', name:'Male Reproductive', emoji:'♂️', tint:'--sky-soft', topics:['Infections (epididymitis, prostatitis, STIs)','Neoplasms (prostate, testicular)','Sexual dysfunction','BPH & mechanical (torsion)','Congenital disorders','Drug effects']},
-  {id:'endo', name:'Endocrine', emoji:'🔥', tint:'--gold-soft', topics:['Diabetes mellitus & complications','Hypoglycemia & islet tumors','Thyroid disorders','Parathyroid disorders','Adrenal disorders','Pituitary disorders','MEN syndromes','Congenital & drug effects']},
-  {id:'multisystem', name:'Multisystem Processes', emoji:'🌐', tint:'--plum-soft', topics:['Systemic infections','Autoimmune & vasculitis','Paraneoplastic & inherited cancer','Nutrition & vitamins','Toxins & environmental','Bites & stings','Fluid, electrolyte & acid-base','Abuse & multiple trauma','Shock & sepsis','Genetic & metabolic syndromes','Drug effects']},
-  {id:'biostats', name:'Biostatistics & Epidemiology', emoji:'📊', tint:'--sky-soft', topics:['Epidemiology & population health','Study designs','Measures of association (RR, OR, NNT)','Data distributions','Screening & testing (sens, spec, PPV)','Study interpretation & bias','Evidence-based medicine','Research ethics']},
-  {id:'social', name:'Social Sciences & Ethics', emoji:'⚖️', tint:'--sage-soft', topics:['Communication & interpersonal skills','Medical ethics & end-of-life','Systems-based practice & safety','Quality improvement','Health policy & economics']}
+  {id:'biostats', name:'Biostatistics & Epidemiology', emoji:'📊', tint:'--sky-soft', topics:['Study designs (cohort, case-control, RCT)','Sensitivity, specificity, PPV & NPV','Incidence vs prevalence','Risk measures (RR, OR, NNT)','Bias & confounding','Hypothesis testing & error types','Statistical tests & distributions']},
+  {id:'publichealth', name:'Public Health, Ethics & Safety', emoji:'⚖️', tint:'--sage-soft', topics:['Medical ethics & informed consent','Capacity & end-of-life care','Communication skills','Quality improvement & patient safety','Health systems & economics']},
+  {id:'biochem', name:'Biochemistry & Genetics', emoji:'🧬', tint:'--plum-soft', topics:['Molecular biology (DNA, RNA, transcription, translation)','Lab techniques (PCR, blotting, ELISA)','Enzymes & kinetics','Glycolysis, gluconeogenesis & TCA','Glycogen storage diseases','Lysosomal storage diseases','Fatty acid & lipid metabolism','Amino acids, urea cycle & ammonia','Purine & pyrimidine metabolism','Vitamins (B-complex, A, C, D, E, K)','Inborn errors of metabolism','Inheritance patterns & genetics','Chromosomal & trinucleotide disorders','Collagen & connective tissue disorders']},
+  {id:'immuno', name:'Immunology', emoji:'🛡️', tint:'--sky-soft', topics:['Innate vs adaptive immunity','T cells & MHC','B cells & antibodies (Ig types)','Complement system','Cytokines','Hypersensitivity reactions (I-IV)','Immunodeficiencies (B, T, combined)','Phagocyte & complement defects','Transplant & graft-vs-host','Immunosuppressants']},
+  {id:'micro', name:'Microbiology', emoji:'🦠', tint:'--coral-soft', topics:['Gram-positive cocci (Staph, Strep)','Gram-positive bacilli (Clostridia, Listeria)','Gram-negative enterics (E. coli, Salmonella)','Gram-negative respiratory & zoonotic','Mycobacteria & spirochetes','Atypicals (Chlamydia, Mycoplasma, Rickettsia)','Systemic & opportunistic fungi','Parasites (protozoa & helminths)','DNA viruses','RNA viruses','HIV / AIDS','Antimicrobial drugs overview']},
+  {id:'path', name:'General Pathology', emoji:'🔬', tint:'--gold-soft', topics:['Cellular adaptations & injury','Cell death (necrosis, apoptosis)','Acute & chronic inflammation','Wound healing','Neoplasia & carcinogenesis','Tumor markers & paraneoplastic syndromes','Amyloidosis']},
+  {id:'pharm', name:'General Pharmacology', emoji:'💊', tint:'--plum-soft', topics:['Pharmacokinetics','Pharmacodynamics & dose-response','Autonomic nervous system overview','Cholinergics & anticholinergics','Adrenergics & beta blockers','Toxicities & antidotes']},
+  {id:'behavioral', name:'Behavioral Science & Psych', emoji:'💭', tint:'--plum-soft', topics:['Psychotic disorders','Mood disorders','Anxiety, OCD & trauma disorders','Personality disorders','Somatic symptom disorders','Eating & impulse-control disorders','Childhood disorders (ADHD, autism)','Substance use & withdrawal','Conditioning & psychology basics']},
+  {id:'humandev', name:'Human Development', emoji:'👶', tint:'--sage-soft', topics:['Developmental milestones','Well-child & preventive care','Adolescence & puberty','Aging & geriatrics']},
+  {id:'cardio', name:'Cardiovascular', emoji:'❤️', tint:'--coral-soft', topics:['Cardiac & vascular physiology','Ischemic heart disease (angina, ACS)','MI & post-MI timeline / complications','Heart failure','Cardiomyopathies (dilated, HCM, restrictive)','Valvular disease & murmurs','Congenital heart disease (shunts)','Arrhythmias & conduction blocks','Hypertension','Dyslipidemia','Vasculitis & aneurysms','Pericarditis & endocarditis','Cardiovascular drugs']},
+  {id:'pulm', name:'Respiratory', emoji:'🫁', tint:'--sky-soft', topics:['Pulmonary physiology & V/Q','Obstructive disease (COPD, asthma)','Restrictive & interstitial disease','Pneumonia & tuberculosis','Pulmonary embolism & hypertension','Lung cancer','Pleural disease & pneumothorax','ARDS & sleep apnea','Respiratory drugs']},
+  {id:'renal', name:'Renal & Urinary', emoji:'💧', tint:'--sky-soft', topics:['Renal physiology & acid-base','Electrolyte disorders','Acute kidney injury & ATN','Nephritic syndromes','Nephrotic syndromes','Tubulointerstitial disease','Chronic kidney disease','Kidney stones','Cystic disease & tumors','Diuretics']},
+  {id:'gi', name:'Gastrointestinal', emoji:'🍽️', tint:'--gold-soft', topics:['Oral & esophageal disorders','Gastric disease (gastritis, PUD, cancer)','Small bowel & malabsorption','IBD (Crohn, ulcerative colitis)','Colorectal polyps & cancer','Diverticular & vascular bowel disease','Pancreas (pancreatitis, cancer)','Biliary & gallbladder disease','Liver: hepatitis & cirrhosis','Jaundice & bilirubin metabolism','GI drugs']},
+  {id:'heme', name:'Hematology & Oncology', emoji:'🩸', tint:'--coral-soft', topics:['Microcytic anemias','Macrocytic & normocytic anemias','Hemolytic anemias','Platelet disorders','Coagulation disorders','Thrombosis syndromes','Acute & chronic leukemias','Lymphomas (Hodgkin, non-Hodgkin)','Plasma cell disorders','Myeloproliferative disorders','Chemotherapy agents']},
+  {id:'endo', name:'Endocrine', emoji:'🔥', tint:'--gold-soft', topics:['Hypothalamic & pituitary disorders','Diabetes mellitus & complications','DKA & HHS','Thyroid disorders','Parathyroid & calcium','Adrenal disorders','MEN syndromes','Endocrine & diabetes drugs']},
+  {id:'repro', name:'Reproductive', emoji:'🤰', tint:'--plum-soft', topics:['Reproductive embryology & anatomy','Hormones & menstrual cycle','Pregnancy & complications','Labor, delivery & puerperium','Menstrual & ovarian disorders (PCOS)','Cervical, uterine & ovarian neoplasia','Breast disorders & cancer','Male repro (BPH, prostate, testicular)','Sexually transmitted infections','Reproductive drugs']},
+  {id:'msk', name:'MSK, Skin & Connective Tissue', emoji:'🦴', tint:'--gold-soft', topics:['Bone physiology & metabolic bone disease','Osteoporosis & drugs','Bone tumors','Arthritis (RA, OA, gout)','Seronegative spondyloarthritis','Autoimmune / connective tissue (SLE, scleroderma)','Muscle & neuromuscular disorders','Skin infections & inflammatory dermatoses','Blistering & hypersensitivity dermatoses','Skin cancers']},
+  {id:'neuro', name:'Neurology & Special Senses', emoji:'🧠', tint:'--plum-soft', topics:['Neuroanatomy & tracts','Cerebrovascular disease & stroke','Intracranial hemorrhage','Seizures & epilepsy','Headache syndromes','Dementias & neurodegenerative','Demyelinating disease (MS)','CNS infections','CNS tumors','Spinal cord & peripheral nerve','Eye & ear disorders','Neuro & psych drugs']}
 ];
 const SYS = Object.fromEntries(SYSTEMS.map(s=>[s.id,s]));
 const TOTAL_TOPICS = SYSTEMS.reduce((a,s)=>a+s.topics.length,0);
 
 const WEEKS = [
-  {n:1, phase:'Content Review', systems:['human-dev','biostats'], note:'Gentle start — ease in 👶'},
-  {n:2, systems:['immune']},
-  {n:3, systems:['blood']},
-  {n:4, systems:['behavioral']},
-  {n:5, systems:['neuro'], part:'Part 1'},
-  {n:6, systems:['neuro'], part:'Part 2'},
-  {n:7, type:'review', note:'Catch-up & review — breathe after the neuro block'},
-  {n:8, systems:['skin']},
-  {n:9, systems:['msk']},
-  {n:10, systems:['cardio'], part:'Part 1'},
-  {n:11, systems:['cardio'], part:'Part 2'},
-  {n:12, systems:['resp']},
-  {n:13, systems:['gi'], part:'Part 1'},
-  {n:14, systems:['gi'], part:'Part 2'},
-  {n:15, systems:['renal']},
-  {n:16, systems:['endo']},
-  {n:17, systems:['repro-f','repro-m']},
-  {n:18, systems:['pregnancy','social'], note:'Lighter mixed week'},
-  {n:19, systems:['multisystem'], note:'First pass complete — huge milestone 🎉'},
-  {n:20, phase:'Practice & Assessments', type:'qbank', note:'Mixed Qbank blocks begin 💪'},
-  {n:21, type:'qbank', milestone:'Baseline NBME'},
-  {n:22, type:'weak'},
-  {n:23, type:'rest', note:'Holiday week — lighter load, rest & recharge 🎄'},
-  {n:24, type:'qbank', milestone:'NBME assessment'},
-  {n:25, type:'weak'},
-  {n:26, type:'qbank', milestone:'NBME assessment'},
-  {n:27, type:'weak', note:'Review & prep for the pre-step'},
-  {n:28, type:'milestone', milestone:'Pre-step by Jan 29 ✅', deadline:true},
-  {n:29, phase:'Final Push', type:'weak', note:'Target weak areas from your pre-step'},
-  {n:30, type:'qbank', milestone:'Full-length practice'},
-  {n:31, type:'qbank', milestone:'Final NBME / UWSA'},
-  {n:32, type:'exam', milestone:'🎯 Take Step 1 — then March is YOURS'}
+  {n:1, phase:'Content Review', systems:['biostats','publichealth'], note:'Fresh start — ease in, no pressure ✨'},
+  {n:2, systems:['biochem'], note:'Big subject — spread it across the week, spillover is fine'},
+  {n:3, systems:['immuno']},
+  {n:4, systems:['micro'], part:'Bacteria'},
+  {n:5, systems:['micro'], part:'Viruses, Fungi & Parasites'},
+  {n:6, systems:['path','pharm']},
+  {n:7, systems:['behavioral','humandev']},
+  {n:8, systems:['cardio']},
+  {n:9, systems:['pulm']},
+  {n:10, systems:['renal']},
+  {n:11, systems:['gi']},
+  {n:12, systems:['heme']},
+  {n:13, systems:['endo']},
+  {n:14, systems:['repro']},
+  {n:15, systems:['msk']},
+  {n:16, systems:['neuro'], note:'Last content block — you made it through 🎉'},
+  {n:17, phase:'Practice & Assessments', type:'qbank', note:'Activate UWorld now — mixed blocks begin 💻'},
+  {n:18, type:'qbank', milestone:'Baseline NBME'},
+  {n:19, type:'weak', note:'Review & prep for the pre-step'},
+  {n:20, type:'milestone', milestone:'Pre-step by Jan 29 ✅', deadline:true},
+  {n:21, phase:'Final Push', type:'weak', note:'Target weak areas from your pre-step'},
+  {n:22, type:'qbank', milestone:'Full-length practice'},
+  {n:23, type:'qbank', milestone:'Final NBME / UWSA'},
+  {n:24, type:'exam', milestone:'🎯 Take Step 1 — then March is YOURS'}
 ];
 
 const REWARD_TIERS = [
@@ -474,7 +466,7 @@ const REWARDS = [
   {id:'aux', tier:'tiny', emoji:'🎧', name:'Aux control all day', cost:6, rep:true},
   {id:'show', tier:'tiny', emoji:'🍿', name:'One guilt-free comfort-show episode', cost:6, rep:true},
   {id:'coffee', tier:'tiny', emoji:'☕', name:'Coffee run — your exact order', cost:8, rep:true},
-  {id:'boba', tier:'tiny', emoji:'🧋', name:'Boba run', cost:10, rep:true},
+  {id:'sleepin', tier:'tiny', emoji:'🛌', name:'Sleep-in pass — I take the morning', cost:10, rep:true},
   {id:'scroll', tier:'tiny', emoji:'📱', name:'Guilt-free scroll break', cost:6, rep:true},
   // medium
   {id:'officedepot', tier:'medium', emoji:'✏️', name:'Office Depot run — pens & highlighter haul', cost:28, rep:true},
@@ -504,7 +496,7 @@ const REWARDS = [
   // mega / milestone
   {id:'nbme1', tier:'mega', emoji:'🩺', name:'First NBME taken → treat-yourself gift card', cost:60, note:'Redeem after your baseline NBME'},
   {id:'allsys', tier:'mega', emoji:'🏔️', name:'Every system 100% reviewed → a special surprise', cost:80, gate:'allsystems'},
-  {id:'alltopics', tier:'mega', emoji:'🎉', name:'All 155 topics done → celebration dinner out', cost:90, gate:'alltopics'},
+  {id:'alltopics', tier:'mega', emoji:'🎉', name:'All topics reviewed → celebration dinner out', cost:90, gate:'alltopics'},
   {id:'prestep', tier:'mega', emoji:'🏁', name:'Pre-step passed → full rest day + your favorite meal', cost:80, note:'Redeem once you pass a pre-step'},
   {id:'italy', tier:'mega', emoji:'🇮🇹', name:'Italy adventure', cost:250, note:'Finish & pass Step 1 before March ✨'},
   {id:'conquered', tier:'mega', emoji:'🥂', name:'Step 1 conquered → the biggest celebration, your call', cost:140, note:'You earned the whole world'}
@@ -586,11 +578,10 @@ function genTasks(w){
     {label:'😴 Sleep well the night before', stars:5},
     {label:'🍀 Trust your prep — you did the work', stars:5}];
   return [
-    {label:'📺 Watch high-yield videos: '+s+p, stars:3},
-    {label:'🃏 Drill '+s+' Anki cards', stars:3},
-    {label:'📖 Read First Aid / Pathoma: '+s, stars:3},
-    {label:'✅ One '+s+' UWorld block + review', stars:4},
-    {label:'☑️ Tick off '+s+' topics in Review', stars:2}];
+    {label:'📺 Watch the videos for '+s+p+' (B&B / Sketchy / Pathoma / Pixorize)', stars:3},
+    {label:'🃏 '+s+' flashcards / Anki', stars:3},
+    {label:'📖 Read First Aid: '+s, stars:3},
+    {label:'☑️ Tick off '+s+' topics in Review', stars:3}];
 }
 function weekTitle(w){
   if(w.systems) return sysNames(w)+(w.part?' — '+w.part:'');
@@ -847,25 +838,20 @@ function esc(s){ return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>
 
 /* ---- RESOURCES ---- */
 const RESOURCES=[
-  {group:'📺 Videos', items:[
-    {e:'💊', n:'Sketchy', d:'Micro · Pharm · Path', tint:'--coral-soft', url:'https://www.sketchy.com'},
-    {e:'📗', n:'Pathoma', d:'Fundamentals of pathology', tint:'--plum-soft', url:'https://www.pathoma.com'},
-    {e:'🎥', n:'Boards & Beyond', d:'Full Step 1 video course', tint:'--sky-soft', url:'https://www.boardsbeyond.com'},
-    {e:'🩺', n:'Dirty Medicine', d:'High-yield YouTube', tint:'--sage-soft', url:'https://www.youtube.com/@DirtyMedicine'}]},
-  {group:'🃏 Anki', items:[
-    {e:'👑', n:'The AnKing', d:'AnKing Step deck & guides', tint:'--gold-soft', url:'https://www.theanking.com'},
-    {e:'⬇️', n:'AnkiWeb', d:'Sync & download Anki', tint:'--plum-soft', url:'https://apps.ankiweb.net'}]},
-  {group:'✅ Question banks', items:[
-    {e:'🎯', n:'UWorld', d:'The Qbank', tint:'--coral-soft', url:'https://www.uworld.com/medical/usmle-step-1/'},
-    {e:'📚', n:'AMBOSS', d:'Qbank + library', tint:'--sky-soft', url:'https://www.amboss.com'}]},
-  {group:'📝 Practice exams', items:[
+  {group:'🎥 Video resources (free)', items:[
+    {e:'🎬', n:'Boards & Beyond', d:'Free lectures on YouTube', tint:'--coral-soft', url:'https://www.youtube.com/c/BoardsandBeyond'},
+    {e:'🖼️', n:'Pixorize', d:'HY biochem & immuno pictures', tint:'--plum-soft', url:'https://www.youtube.com/c/pixorize'},
+    {e:'🩺', n:'Dirty Medicine', d:'Free high-yield reviews', tint:'--sage-soft', url:'https://www.youtube.com/c/DirtyMedicine'},
+    {e:'💊', n:'Sketchy', d:'Micro, Pharm & Path (you have it)', tint:'--gold-soft', url:'https://www.sketchy.com'}]},
+  {group:'📄 High-yield docs (free)', items:[
+    {e:'📁', n:'HY NBME images', d:'Shared Drive folder', tint:'--sky-soft', url:'https://drive.google.com/drive/folders/1z3wWKGjdvUhJeEepwrslOAguX4IZI3Vd'},
+    {e:'✍️', n:'Mehlman PDFs', d:'Free high-yield notes', tint:'--plum-soft', url:'https://mehlmanmedical.com'}]},
+  {group:'✅ Practice', items:[
     {e:'🧪', n:'NBME Self-Assessments', d:'Official practice tests', tint:'--sage-soft', url:'https://www.nbme.org/examinees/self-assessments'},
-    {e:'🆓', n:'Free 120', d:'Official practice questions', tint:'--gold-soft', url:'https://www.usmle.org/prepare-your-exam'},
-    {e:'📊', n:'UWSA 1 & 2', d:'UWorld self-assessments', tint:'--coral-soft', url:'https://www.uworld.com/medical/usmle-step-1/'}]},
-  {group:'📖 Reference', items:[
-    {e:'📕', n:'First Aid', d:'The Step 1 bible', tint:'--coral-soft', url:'https://www.firstaidteam.com'},
-    {e:'✍️', n:'Mehlman PDFs', d:'Free high-yield notes', tint:'--plum-soft', url:'https://mehlmanmedical.com'},
-    {e:'🏛️', n:'USMLE.org', d:'Official exam info & dates', tint:'--sky-soft', url:'https://www.usmle.org'}]}
+    {e:'🆓', n:'Free 120', d:'Official free practice Qs', tint:'--gold-soft', url:'https://www.usmle.org/prepare-your-exam'},
+    {e:'🎯', n:'UWorld', d:'Activate for the practice phase', tint:'--coral-soft', url:'https://www.uworld.com/medical/usmle-step-1/'}]},
+  {group:'🏛️ Official', items:[
+    {e:'🏛️', n:'USMLE.org', d:'Exam info & scheduling', tint:'--sky-soft', url:'https://www.usmle.org'}]}
 ];
 function renderResources(){
   document.getElementById('view-resources').innerHTML=`
