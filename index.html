@@ -391,9 +391,9 @@ const DOC_PATH = { collection: "usmleTracker", doc: "shared" };
 
 /* ---- study config ---- */
 const START = new Date('2026-09-13T00:00:00');   // study start (Sunday) — restarted
-const TOTAL_WEEKS = 24;
-const CONTENT_WEEKS = 16;
-const TOPIC_STAR = 5, SYS_BONUS = 25;
+const TOTAL_WEEKS = 26;
+const CONTENT_WEEKS = 17;
+const TOPIC_STAR = 3, SYS_BONUS = 20;
 const DEADLINES = {
   soft:     new Date('2027-02-28T00:00:00'),
   preStep:  new Date('2027-01-29T00:00:00'),
@@ -402,53 +402,55 @@ const DEADLINES = {
 };
 
 const SYSTEMS = [
-  {id:'biostats', name:'Biostatistics & Epidemiology', emoji:'📊', tint:'--sky-soft', topics:['Study designs (cohort, case-control, RCT)','Sensitivity, specificity, PPV & NPV','Incidence vs prevalence','Risk measures (RR, OR, NNT)','Bias & confounding','Hypothesis testing & error types','Statistical tests & distributions']},
-  {id:'publichealth', name:'Public Health, Ethics & Safety', emoji:'⚖️', tint:'--sage-soft', topics:['Medical ethics & informed consent','Capacity & end-of-life care','Communication skills','Quality improvement & patient safety','Health systems & economics']},
-  {id:'biochem', name:'Biochemistry & Genetics', emoji:'🧬', tint:'--plum-soft', topics:['Molecular biology (DNA, RNA, transcription, translation)','Lab techniques (PCR, blotting, ELISA)','Enzymes & kinetics','Glycolysis, gluconeogenesis & TCA','Glycogen storage diseases','Lysosomal storage diseases','Fatty acid & lipid metabolism','Amino acids, urea cycle & ammonia','Purine & pyrimidine metabolism','Vitamins (B-complex, A, C, D, E, K)','Inborn errors of metabolism','Inheritance patterns & genetics','Chromosomal & trinucleotide disorders','Collagen & connective tissue disorders']},
-  {id:'immuno', name:'Immunology', emoji:'🛡️', tint:'--sky-soft', topics:['Innate vs adaptive immunity','T cells & MHC','B cells & antibodies (Ig types)','Complement system','Cytokines','Hypersensitivity reactions (I-IV)','Immunodeficiencies (B, T, combined)','Phagocyte & complement defects','Transplant & graft-vs-host','Immunosuppressants']},
-  {id:'micro', name:'Microbiology', emoji:'🦠', tint:'--coral-soft', topics:['Gram-positive cocci (Staph, Strep)','Gram-positive bacilli (Clostridia, Listeria)','Gram-negative enterics (E. coli, Salmonella)','Gram-negative respiratory & zoonotic','Mycobacteria & spirochetes','Atypicals (Chlamydia, Mycoplasma, Rickettsia)','Systemic & opportunistic fungi','Parasites (protozoa & helminths)','DNA viruses','RNA viruses','HIV / AIDS','Antimicrobial drugs overview']},
-  {id:'path', name:'General Pathology', emoji:'🔬', tint:'--gold-soft', topics:['Cellular adaptations & injury','Cell death (necrosis, apoptosis)','Acute & chronic inflammation','Wound healing','Neoplasia & carcinogenesis','Tumor markers & paraneoplastic syndromes','Amyloidosis']},
-  {id:'pharm', name:'General Pharmacology', emoji:'💊', tint:'--plum-soft', topics:['Pharmacokinetics','Pharmacodynamics & dose-response','Autonomic nervous system overview','Cholinergics & anticholinergics','Adrenergics & beta blockers','Toxicities & antidotes']},
-  {id:'behavioral', name:'Behavioral Science & Psych', emoji:'💭', tint:'--plum-soft', topics:['Psychotic disorders','Mood disorders','Anxiety, OCD & trauma disorders','Personality disorders','Somatic symptom disorders','Eating & impulse-control disorders','Childhood disorders (ADHD, autism)','Substance use & withdrawal','Conditioning & psychology basics']},
-  {id:'humandev', name:'Human Development', emoji:'👶', tint:'--sage-soft', topics:['Developmental milestones','Well-child & preventive care','Adolescence & puberty','Aging & geriatrics']},
-  {id:'cardio', name:'Cardiovascular', emoji:'❤️', tint:'--coral-soft', topics:['Cardiac & vascular physiology','Ischemic heart disease (angina, ACS)','MI & post-MI timeline / complications','Heart failure','Cardiomyopathies (dilated, HCM, restrictive)','Valvular disease & murmurs','Congenital heart disease (shunts)','Arrhythmias & conduction blocks','Hypertension','Dyslipidemia','Vasculitis & aneurysms','Pericarditis & endocarditis','Cardiovascular drugs']},
-  {id:'pulm', name:'Respiratory', emoji:'🫁', tint:'--sky-soft', topics:['Pulmonary physiology & V/Q','Obstructive disease (COPD, asthma)','Restrictive & interstitial disease','Pneumonia & tuberculosis','Pulmonary embolism & hypertension','Lung cancer','Pleural disease & pneumothorax','ARDS & sleep apnea','Respiratory drugs']},
-  {id:'renal', name:'Renal & Urinary', emoji:'💧', tint:'--sky-soft', topics:['Renal physiology & acid-base','Electrolyte disorders','Acute kidney injury & ATN','Nephritic syndromes','Nephrotic syndromes','Tubulointerstitial disease','Chronic kidney disease','Kidney stones','Cystic disease & tumors','Diuretics']},
-  {id:'gi', name:'Gastrointestinal', emoji:'🍽️', tint:'--gold-soft', topics:['Oral & esophageal disorders','Gastric disease (gastritis, PUD, cancer)','Small bowel & malabsorption','IBD (Crohn, ulcerative colitis)','Colorectal polyps & cancer','Diverticular & vascular bowel disease','Pancreas (pancreatitis, cancer)','Biliary & gallbladder disease','Liver: hepatitis & cirrhosis','Jaundice & bilirubin metabolism','GI drugs']},
-  {id:'heme', name:'Hematology & Oncology', emoji:'🩸', tint:'--coral-soft', topics:['Microcytic anemias','Macrocytic & normocytic anemias','Hemolytic anemias','Platelet disorders','Coagulation disorders','Thrombosis syndromes','Acute & chronic leukemias','Lymphomas (Hodgkin, non-Hodgkin)','Plasma cell disorders','Myeloproliferative disorders','Chemotherapy agents']},
-  {id:'endo', name:'Endocrine', emoji:'🔥', tint:'--gold-soft', topics:['Hypothalamic & pituitary disorders','Diabetes mellitus & complications','DKA & HHS','Thyroid disorders','Parathyroid & calcium','Adrenal disorders','MEN syndromes','Endocrine & diabetes drugs']},
-  {id:'repro', name:'Reproductive', emoji:'🤰', tint:'--plum-soft', topics:['Reproductive embryology & anatomy','Hormones & menstrual cycle','Pregnancy & complications','Labor, delivery & puerperium','Menstrual & ovarian disorders (PCOS)','Cervical, uterine & ovarian neoplasia','Breast disorders & cancer','Male repro (BPH, prostate, testicular)','Sexually transmitted infections','Reproductive drugs']},
-  {id:'msk', name:'MSK, Skin & Connective Tissue', emoji:'🦴', tint:'--gold-soft', topics:['Bone physiology & metabolic bone disease','Osteoporosis & drugs','Bone tumors','Arthritis (RA, OA, gout)','Seronegative spondyloarthritis','Autoimmune / connective tissue (SLE, scleroderma)','Muscle & neuromuscular disorders','Skin infections & inflammatory dermatoses','Blistering & hypersensitivity dermatoses','Skin cancers']},
-  {id:'neuro', name:'Neurology & Special Senses', emoji:'🧠', tint:'--plum-soft', topics:['Neuroanatomy & tracts','Cerebrovascular disease & stroke','Intracranial hemorrhage','Seizures & epilepsy','Headache syndromes','Dementias & neurodegenerative','Demyelinating disease (MS)','CNS infections','CNS tumors','Spinal cord & peripheral nerve','Eye & ear disorders','Neuro & psych drugs']}
+  {id:'biostats', name:'Biostatistics & Epidemiology', emoji:'📊', tint:'--sky-soft', topics:['Study designs (cohort, case-control, RCT)','Sensitivity & specificity','PPV & NPV','Incidence vs prevalence','Relative risk & odds ratio','NNT & absolute risk','Bias types','Confounding','Hypothesis testing & p-values','Type I & II error & power']},
+  {id:'publichealth', name:'Public Health, Ethics & Safety', emoji:'⚖️', tint:'--sage-soft', topics:['Informed consent & capacity','Confidentiality & HIPAA','End-of-life & advance directives','Ethical principles','Communication & difficult conversations','Quality improvement (PDSA)','Patient safety & error types','Health insurance & economics']},
+  {id:'biochem', name:'Biochemistry & Genetics', emoji:'🧬', tint:'--plum-soft', topics:['DNA structure & replication','DNA repair','Transcription','Translation','Lab techniques (PCR, blotting, ELISA)','Enzyme kinetics (Km, Vmax)','Glycolysis','Gluconeogenesis','TCA cycle & electron transport','Pyruvate dehydrogenase','Glycogen metabolism','Glycogen storage diseases','Lysosomal storage diseases','HMP shunt & G6PD','Fructose & galactose disorders','Fatty acid oxidation & synthesis','Ketone bodies','Cholesterol & lipoproteins','Amino acid disorders (PKU, alkaptonuria)','Urea cycle & hyperammonemia','Purine & pyrimidine metabolism','Vitamins B1-B3','Vitamins B6, B9, B12','Vitamins A, C, D, E, K','Ethanol metabolism','Inheritance patterns','Trisomies & chromosomal disorders','Collagen disorders (Ehlers-Danlos, Marfan, OI)']},
+  {id:'immuno', name:'Immunology', emoji:'🛡️', tint:'--sky-soft', topics:['Innate immunity','Complement pathways','Complement deficiencies','MHC I & II','T cell activation & subsets','B cell activation & antibodies','Immunoglobulin isotypes','Cytokines (IL, TNF, IFN)','Vaccines','Hypersensitivity type I','Hypersensitivity II & III','Hypersensitivity IV','B-cell immunodeficiencies','T-cell & combined immunodeficiencies','Phagocyte defects (CGD, LAD, Chediak-Higashi)','Transplant rejection & immunosuppressants']},
+  {id:'micro', name:'Microbiology', emoji:'🦠', tint:'--coral-soft', topics:['Staph aureus','Staph epidermidis & saprophyticus','Strep pyogenes','Strep agalactiae','Strep pneumoniae & viridans','Enterococcus','Bacillus (anthracis, cereus)','Clostridia (tetani, botulinum, difficile, perfringens)','Corynebacterium diphtheriae','Listeria','Actinomyces & Nocardia','Neisseria (meningitidis, gonorrhoeae)','E. coli','Klebsiella, Enterobacter, Serratia','Salmonella & Shigella','Campylobacter, Vibrio, Yersinia','H. pylori','Pseudomonas','Haemophilus, Bordetella, Legionella','Zoonotics (Bartonella, Brucella, Francisella)','Mycobacteria (TB, leprae)','Spirochetes (Borrelia, Leptospira, Treponema)','Atypicals (Chlamydia, Mycoplasma, Rickettsia)','Herpesviruses (HSV, VZV, EBV, CMV)','Hepatitis viruses','HPV & other DNA viruses','Picornaviruses & enteroviruses','Influenza & paramyxoviruses','Flavivirus & togavirus (Dengue, Zika)','HIV / AIDS','Systemic mycoses (Histo, Blasto, Cocci)','Opportunistic fungi (Candida, Aspergillus, Crypto, PCP)','Cutaneous fungi & dermatophytes','Intestinal protozoa (Giardia, Entamoeba, Crypto)','Blood & tissue protozoa (Malaria, Babesia, Toxo)','Nematodes','Cestodes & trematodes','Antibacterials overview','Antifungals & antivirals']},
+  {id:'path', name:'General Pathology', emoji:'🔬', tint:'--gold-soft', topics:['Cellular adaptation (hyperplasia, metaplasia)','Reversible vs irreversible injury','Necrosis types','Apoptosis','Free radical injury','Acute inflammation','Chronic inflammation & granulomas','Wound healing','Neoplasia basics','Carcinogenesis & oncogenes','Tumor markers','Paraneoplastic syndromes','Amyloidosis']},
+  {id:'pharm', name:'General Pharmacology', emoji:'💊', tint:'--plum-soft', topics:['Pharmacokinetics (absorption, distribution)','Metabolism & elimination','Half-life & clearance','Dose-response, efficacy & potency','Enzyme induction & inhibition','Autonomic nervous system overview','Cholinomimetics','Anticholinesterases','Muscarinic antagonists','Sympathomimetics','Alpha & beta agonists','Beta blockers','Toxicities & antidotes','Drug reactions']},
+  {id:'behavioral', name:'Behavioral Science & Psych', emoji:'💭', tint:'--plum-soft', topics:['Psychotic disorders & schizophrenia','Major depressive disorder','Bipolar disorder','Anxiety disorders','OCD & related disorders','PTSD & acute stress','Personality disorders (clusters A/B/C)','Somatic symptom disorders','Eating disorders','ADHD & disruptive disorders','Autism & childhood disorders','Substance intoxication & withdrawal','Sleep & sexual disorders','Classical & operant conditioning']},
+  {id:'humandev', name:'Human Development', emoji:'👶', tint:'--sage-soft', topics:['Infant milestones (0-12 mo)','Toddler & preschool milestones','Puberty & Tanner stages','Adult development','Geriatric changes','Grief & bereavement']},
+  {id:'cardio', name:'Cardiovascular', emoji:'❤️', tint:'--coral-soft', topics:['Cardiac cycle & pressure-volume loops','Ischemic heart disease & angina','Acute coronary syndrome (STEMI, NSTEMI, UA)','MI evolution & complications','Systolic vs diastolic heart failure','Dilated cardiomyopathy','Hypertrophic cardiomyopathy','Restrictive cardiomyopathy','Aortic stenosis & regurgitation','Mitral stenosis & regurgitation','Rheumatic heart disease','Endocarditis','Pericarditis & tamponade','Left-to-right shunts (ASD, VSD, PDA)','Right-to-left shunts (TOF, TGA)','Hypertension & emergencies','Dyslipidemias','Atherosclerosis','Aneurysms & dissection','Vasculitides','Arrhythmias & conduction blocks','Cardiac & antiarrhythmic drugs']},
+  {id:'pulm', name:'Respiratory', emoji:'🫁', tint:'--sky-soft', topics:['Lung volumes & mechanics','V/Q mismatch & hypoxemia','Oxygen-hemoglobin curve','COPD & emphysema','Asthma & bronchiectasis','Restrictive lung disease','Idiopathic pulmonary fibrosis','Pneumoconioses','Sarcoidosis','Community & atypical pneumonia','Tuberculosis','Pulmonary embolism','Pulmonary hypertension','ARDS','Pneumothorax & pleural effusion','Lung cancer types','Sleep apnea','Respiratory drugs']},
+  {id:'renal', name:'Renal & Urinary', emoji:'💧', tint:'--sky-soft', topics:['Renal physiology & GFR','Sodium & water balance','Potassium disorders','Calcium & phosphate','Acid-base disorders','Renal tubular acidosis','Acute kidney injury','Acute tubular necrosis','Nephritic syndromes','Nephrotic syndromes','Glomerulonephritis types','Tubulointerstitial nephritis','Chronic kidney disease','Kidney stones','Cystic kidney disease','Renal cell carcinoma & Wilms','Bladder & lower urinary tract','Diuretics']},
+  {id:'gi', name:'Gastrointestinal', emoji:'🍽️', tint:'--gold-soft', topics:['Oral & esophageal disorders','GERD & Barrett esophagus','Achalasia & esophageal cancer','Gastritis & peptic ulcer disease','Gastric cancer','Malabsorption (celiac, etc.)','Crohn disease','Ulcerative colitis','Colorectal polyps','Colorectal cancer','Diverticular disease','Ischemic bowel & angiodysplasia','Appendicitis & obstruction','Acute & chronic pancreatitis','Pancreatic cancer','Gallstones & cholecystitis','Biliary tract disease','Viral hepatitis','Cirrhosis & complications','Jaundice & bilirubin metabolism','GI drugs']},
+  {id:'heme', name:'Hematology & Oncology', emoji:'🩸', tint:'--coral-soft', topics:['Iron deficiency & anemia of chronic disease','Thalassemias','Sideroblastic anemia','B12 & folate deficiency','Normocytic anemia workup','Hereditary spherocytosis','G6PD deficiency','Sickle cell disease','Autoimmune hemolytic anemia','Platelet disorders (ITP, TTP, HUS)','von Willebrand & hemophilia','DIC','Hypercoagulable states','Acute leukemias (ALL, AML)','Chronic leukemias (CLL, CML)','Hodgkin lymphoma','Non-Hodgkin lymphoma','Plasma cell disorders (myeloma)','Myeloproliferative disorders','Chemotherapy agents']},
+  {id:'endo', name:'Endocrine', emoji:'🔥', tint:'--gold-soft', topics:['Pituitary hormones & disorders','Prolactinoma & acromegaly','Diabetes insipidus & SIADH','Type 1 vs type 2 diabetes','DKA & HHS','Diabetes complications','Hypothyroidism & Hashimoto','Hyperthyroidism & Graves','Thyroid nodules & cancer','Parathyroid & calcium disorders','Cushing syndrome','Adrenal insufficiency','Hyperaldosteronism','Pheochromocytoma','MEN syndromes','Endocrine & diabetes drugs']},
+  {id:'repro', name:'Reproductive', emoji:'🤰', tint:'--plum-soft', topics:['Reproductive embryology','Male & female hormones','Menstrual cycle','Puberty & disorders','Normal pregnancy physiology','Pregnancy complications (preeclampsia, GDM)','Ectopic pregnancy & abortion','Labor, delivery & postpartum','Amenorrhea & PCOS','Endometriosis & fibroids','Abnormal uterine bleeding','Cervical dysplasia & cancer','Endometrial & ovarian cancer','Benign breast disease','Breast cancer','Contraception','Menopause','BPH & prostate cancer','Testicular disorders & cancer','Sexually transmitted infections']},
+  {id:'msk', name:'MSK, Skin & Connective Tissue', emoji:'🦴', tint:'--gold-soft', topics:['Bone remodeling & metabolic bone disease','Osteoporosis','Osteomalacia & rickets','Paget disease of bone','Bone tumors (benign & malignant)','Osteoarthritis','Rheumatoid arthritis','Gout & pseudogout','Seronegative spondyloarthropathies','Systemic lupus erythematosus','Scleroderma & Sjogren','Polymyositis & dermatomyositis','Muscular dystrophies','Myasthenia gravis & Lambert-Eaton','Skin infections','Inflammatory dermatoses (psoriasis, eczema)','Blistering & hypersensitivity rashes','Skin cancers']},
+  {id:'neuro', name:'Neurology & Special Senses', emoji:'🧠', tint:'--plum-soft', topics:['Neuroanatomy & tracts','Cerebral cortex & localization','Brainstem & cranial nerves','Spinal cord syndromes','Ischemic stroke','Hemorrhagic stroke','Intracranial hemorrhages (epidural, subdural, SAH)','Aneurysms & AVM','Seizures & epilepsy','Headache (migraine, cluster, tension)','Dementias (Alzheimer, vascular, Lewy)','Parkinson & movement disorders','Huntington disease','Multiple sclerosis & demyelinating','Meningitis & encephalitis','CNS tumors (adult)','CNS tumors (pediatric)','Peripheral neuropathies (GBS, CMT)','Neurocutaneous syndromes','Eye disorders','Ear & vestibular disorders','Neuro & psych drugs']}
 ];
 const SYS = Object.fromEntries(SYSTEMS.map(s=>[s.id,s]));
 const TOTAL_TOPICS = SYSTEMS.reduce((a,s)=>a+s.topics.length,0);
 
 const WEEKS = [
-  {n:1, phase:'Content Review', systems:['biostats','publichealth'], note:'Fresh start — ease in, no pressure ✨'},
-  {n:2, systems:['biochem'], note:'Big subject — spread it across the week, spillover is fine'},
-  {n:3, systems:['immuno']},
-  {n:4, systems:['micro'], part:'Bacteria'},
-  {n:5, systems:['micro'], part:'Viruses, Fungi & Parasites'},
-  {n:6, systems:['path','pharm']},
-  {n:7, systems:['behavioral','humandev']},
-  {n:8, systems:['cardio']},
-  {n:9, systems:['pulm']},
-  {n:10, systems:['renal']},
-  {n:11, systems:['gi']},
-  {n:12, systems:['heme']},
-  {n:13, systems:['endo']},
-  {n:14, systems:['repro']},
-  {n:15, systems:['msk']},
-  {n:16, systems:['neuro'], note:'Last content block — you made it through 🎉'},
-  {n:17, phase:'Practice & Assessments', type:'qbank', note:'Activate UWorld now — mixed blocks begin 💻'},
-  {n:18, type:'qbank', milestone:'Baseline NBME'},
-  {n:19, type:'weak', note:'Review & prep for the pre-step'},
+  {n:1, phase:'Content Review', systems:['biostats','publichealth'], note:'Fresh start — ease in, no pressure'},
+  {n:2, systems:['biochem'], part:'Part 1'},
+  {n:3, systems:['biochem'], part:'Part 2'},
+  {n:4, systems:['immuno']},
+  {n:5, systems:['micro'], part:'Bacteria'},
+  {n:6, systems:['micro'], part:'Viruses, Fungi & Parasites'},
+  {n:7, systems:['path','pharm']},
+  {n:8, systems:['behavioral','humandev']},
+  {n:9, systems:['cardio']},
+  {n:10, systems:['pulm']},
+  {n:11, systems:['renal']},
+  {n:12, systems:['gi']},
+  {n:13, systems:['heme']},
+  {n:14, systems:['endo']},
+  {n:15, systems:['repro']},
+  {n:16, systems:['msk']},
+  {n:17, systems:['neuro'], note:'Last content block — you made it 🎉'},
+  {n:18, phase:'Practice & Assessments', type:'qbank', note:'Activate UWorld now — mixed blocks begin 💻'},
+  {n:19, type:'qbank', milestone:'Baseline NBME'},
   {n:20, type:'milestone', milestone:'Pre-step by Jan 29 ✅', deadline:true},
-  {n:21, phase:'Final Push', type:'weak', note:'Target weak areas from your pre-step'},
+  {n:21, phase:'Final Push', type:'weak', note:'Target weak areas from your pre-step — no rush'},
   {n:22, type:'qbank', milestone:'Full-length practice'},
-  {n:23, type:'qbank', milestone:'Final NBME / UWSA'},
-  {n:24, type:'exam', milestone:'🎯 Take Step 1 — then March is YOURS'}
+  {n:23, type:'weak'},
+  {n:24, type:'qbank', milestone:'Final NBME / UWSA'},
+  {n:25, type:'weak', note:'Light review & rest before exam day'},
+  {n:26, type:'exam', milestone:'🎯 Take Step 1 — then celebrate'}
 ];
 
 const REWARD_TIERS = [
