@@ -198,6 +198,9 @@
   .wk.open .wk-body{display:block}
   .wk .chev{color:var(--faint);transition:.2s}
   .wk.open .chev{transform:rotate(90deg)}
+  .wkfocus{background:var(--surface-2);border-radius:12px;padding:12px 14px;margin:0 0 12px;font-size:12.5px;font-weight:600;line-height:1.55}
+  .wkfocus .wf-group+.wf-group{margin-top:7px}
+  .wkfocus .wf-h{font-weight:800;color:var(--coral-deep);margin-right:6px}
 
   /* calendar */
   .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
@@ -392,7 +395,7 @@ const DOC_PATH = { collection: "usmleTracker", doc: "shared" };
 /* ---- study config ---- */
 const START = new Date('2026-09-13T00:00:00');   // study start (Sunday) — restarted
 const TOTAL_WEEKS = 26;
-const CONTENT_WEEKS = 17;
+const CONTENT_WEEKS = 19;
 const TOPIC_STAR = 3, SYS_BONUS = 20;
 const DEADLINES = {
   soft:     new Date('2027-02-28T00:00:00'),
@@ -425,27 +428,27 @@ const SYS = Object.fromEntries(SYSTEMS.map(s=>[s.id,s]));
 const TOTAL_TOPICS = SYSTEMS.reduce((a,s)=>a+s.topics.length,0);
 
 const WEEKS = [
-  {n:1, phase:'Content Review', systems:['biostats','publichealth'], note:'Fresh start — ease in, no pressure'},
+  {n:1, phase:'Content Review', systems:['biostats','publichealth'], note:'Foundations'},
   {n:2, systems:['biochem'], part:'Part 1'},
   {n:3, systems:['biochem'], part:'Part 2'},
   {n:4, systems:['immuno']},
-  {n:5, systems:['micro'], part:'Bacteria'},
-  {n:6, systems:['micro'], part:'Viruses, Fungi & Parasites'},
-  {n:7, systems:['path','pharm']},
-  {n:8, systems:['behavioral','humandev']},
-  {n:9, systems:['cardio']},
-  {n:10, systems:['pulm']},
-  {n:11, systems:['renal']},
-  {n:12, systems:['gi']},
-  {n:13, systems:['heme']},
-  {n:14, systems:['endo']},
-  {n:15, systems:['repro']},
-  {n:16, systems:['msk']},
-  {n:17, systems:['neuro'], note:'Last content block — you made it 🎉'},
-  {n:18, phase:'Practice & Assessments', type:'qbank', note:'Activate UWorld now — mixed blocks begin 💻'},
-  {n:19, type:'qbank', milestone:'Baseline NBME'},
-  {n:20, type:'milestone', milestone:'Pre-step by Jan 29 ✅', deadline:true},
-  {n:21, phase:'Final Push', type:'weak', note:'Target weak areas from your pre-step — no rush'},
+  {n:5, systems:['behavioral','humandev']},
+  {n:6, systems:['path']},
+  {n:7, phase:'Micro + Pharm Sprint', systems:['micro','pharm'], title:'Micro + Pharm', part:'Bugs 1–7 · Drugs 1–3', micro:[0,6], pharm:[0,2], note:'All done before Jan 1 💪'},
+  {n:8, systems:['micro','pharm'], title:'Micro + Pharm', part:'Bugs 8–14 · Drugs 4–6', micro:[7,13], pharm:[3,5]},
+  {n:9, systems:['micro','pharm'], title:'Micro + Pharm', part:'Bugs 15–21 · Drugs 7–8', micro:[14,20], pharm:[6,7]},
+  {n:10, systems:['micro','pharm'], title:'Micro + Pharm', part:'Bugs 22–27 · Drugs 9–10', micro:[21,26], pharm:[8,9]},
+  {n:11, systems:['micro','pharm'], title:'Micro + Pharm', part:'Bugs 28–33 · Drugs 11–12', micro:[27,32], pharm:[10,11]},
+  {n:12, systems:['micro','pharm'], title:'Micro + Pharm', part:'Bugs 34–39 · Drugs 13–14', micro:[33,38], pharm:[12,13], note:'Micro + Pharm complete 🎉'},
+  {n:13, phase:'Organ Systems', systems:['cardio']},
+  {n:14, systems:['pulm']},
+  {n:15, systems:['renal']},
+  {n:16, systems:['gi']},
+  {n:17, systems:['heme','endo']},
+  {n:18, systems:['repro','msk']},
+  {n:19, systems:['neuro'], note:'Last content block + catch-up 🎉'},
+  {n:20, phase:'Assessments & Practice', type:'milestone', milestone:'Pre-step by Jan 29 ✅', deadline:true, note:'Activate UWorld around now 💻'},
+  {n:21, phase:'Final Push', type:'weak', note:'Target weak areas from your pre-step'},
   {n:22, type:'qbank', milestone:'Full-length practice'},
   {n:23, type:'weak'},
   {n:24, type:'qbank', milestone:'Final NBME / UWSA'},
@@ -579,6 +582,15 @@ function genTasks(w){
     {label:'⭐ '+w.milestone, stars:100},
     {label:'😴 Sleep well the night before', stars:5},
     {label:'🍀 Trust your prep — you did the work', stars:5}];
+  if(w.micro||w.pharm){
+    const nb=w.micro?(w.micro[1]-w.micro[0]+1):0, nd=w.pharm?(w.pharm[1]-w.pharm[0]+1):0;
+    const t=[];
+    if(nb) t.push({label:'🦠 Sketchy Micro — this week\'s '+nb+' bugs', stars:3});
+    if(nd) t.push({label:'💊 Pharm — '+nd+' drug topic'+(nd>1?'s':''), stars:3});
+    t.push({label:'🃏 Anki for this week\'s bugs + drugs', stars:3});
+    t.push({label:'☑️ Tick this week\'s items in Review', stars:3});
+    return t;
+  }
   return [
     {label:'📺 Watch the videos for '+s+p+' (B&B / Sketchy / Pathoma / Pixorize)', stars:3},
     {label:'🃏 '+s+' flashcards / Anki', stars:3},
@@ -586,6 +598,7 @@ function genTasks(w){
     {label:'☑️ Tick off '+s+' topics in Review', stars:3}];
 }
 function weekTitle(w){
+  if(w.title) return w.title+(w.part?' — '+w.part:'');
   if(w.systems) return sysNames(w)+(w.part?' — '+w.part:'');
   if(w.type==='review') return 'Catch-up & Review';
   if(w.type==='rest') return 'Rest & Recharge';
@@ -605,6 +618,13 @@ function weekTint(w){
 function weekEmoji(w){
   if(w.systems) return w.systems.map(id=>SYS[id].emoji).join('');
   return {review:'🔁',rest:'🎄',qbank:'✅',weak:'🎯',milestone:'🏁',exam:'🎯'}[w.type]||'📘';
+}
+function weekFocusHTML(w){
+  if(!(w.micro||w.pharm)) return '';
+  let s='<div class="wkfocus">';
+  if(w.micro){ s+='<div class="wf-group"><span class="wf-h">🦠 Bugs</span> '+SYS.micro.topics.slice(w.micro[0],w.micro[1]+1).map(esc).join(' · ')+'</div>'; }
+  if(w.pharm){ s+='<div class="wf-group"><span class="wf-h">💊 Drugs</span> '+SYS.pharm.topics.slice(w.pharm[0],w.pharm[1]+1).map(esc).join(' · ')+'</div>'; }
+  return s+'</div>';
 }
 
 /* ---- HOME ---- */
@@ -660,6 +680,7 @@ function renderHome(){
         <button class="pill" style="background:var(--plum-soft);color:var(--plum)" data-goto="schedule">See full schedule →</button>
       </div>
       <div style="margin-top:14px">
+        ${weekFocusHTML(week)}
         ${tasks.map((t,i)=>{const k='w'+week.n+'::'+i;const d=state.tasks[k];return `
           <div class="task ${d?'done':''}" data-task="${k}">
             <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></div>
@@ -705,7 +726,7 @@ function renderWeekList(){
   let lastPhase='';
   for(const w of WEEKS){
     if(w.phase&&w.phase!==lastPhase){ lastPhase=w.phase;
-      const em=w.phase==='Content Review'?'📖':w.phase==='Practice & Assessments'?'💪':'🏁';
+      const em={'Content Review':'📖','Micro + Pharm Sprint':'🦠','Organ Systems':'🫀','Assessments & Practice':'🧪','Final Push':'🏁'}[w.phase]||'📘';
       html+=`<div class="phase-div"><span class="em">${em}</span><h3>${w.phase}</h3><div class="rule"></div></div>`; }
     const isNow=w.n===cw, openIt=(w.n===cw)||(w.n===openWeekTarget);
     const tasks=genTasks(w);
@@ -717,7 +738,7 @@ function renderWeekList(){
           <div class="dd">${fmtRange(w.n)}${w.note?' · '+w.note:''}</div>
           ${chips?`<div class="chip-row">${chips}</div>`:''}</div>
         ${isNow?'<span class="now-badge">THIS WEEK</span>':''}<span class="chev">›</span></div>
-      <div class="wk-body">${tasks.map((t,i)=>{const k='w'+w.n+'::'+i;const d=state.tasks[k];return `
+      <div class="wk-body">${weekFocusHTML(w)}${tasks.map((t,i)=>{const k='w'+w.n+'::'+i;const d=state.tasks[k];return `
         <div class="task ${d?'done':''}" data-task="${k}">
           <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></div>
           <div class="label">${t.label}</div><div class="rew">+${t.stars}⭐</div></div>`;}).join('')}</div></div>`;
