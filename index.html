@@ -198,9 +198,11 @@
   .wk.open .wk-body{display:block}
   .wk .chev{color:var(--faint);transition:.2s}
   .wk.open .chev{transform:rotate(90deg)}
-  .wkfocus{background:var(--surface-2);border-radius:12px;padding:12px 14px;margin:0 0 12px;font-size:12.5px;font-weight:600;line-height:1.55}
-  .wkfocus .wf-group+.wf-group{margin-top:7px}
-  .wkfocus .wf-h{font-weight:800;color:var(--coral-deep);margin-right:6px}
+  .wkreview{margin:0 0 6px}
+  .wkrev-sub{font-weight:800;font-size:13px;color:var(--coral-deep);margin:14px 0 2px;display:flex;align-items:center;gap:6px}
+  .wkrev-sub:first-child{margin-top:2px}
+  .wkrev-ct{color:var(--faint);font-weight:700;font-size:11.5px}
+  .revgroup{font-weight:800;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:10px 0 2px;padding-left:2px}
 
   /* calendar */
   .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
@@ -393,9 +395,9 @@ const FIREBASE_CONFIG = {
 const DOC_PATH = { collection: "usmleTracker", doc: "shared" };
 
 /* ---- study config ---- */
-const START = new Date('2026-09-13T00:00:00');   // study start (Sunday) — restarted
-const TOTAL_WEEKS = 26;
-const CONTENT_WEEKS = 19;
+const START = new Date('2026-11-15T00:00:00');   // study start (Sunday) — re-anchored
+const TOTAL_WEEKS = 16;
+const CONTENT_WEEKS = 10;
 const TOPIC_STAR = 3, SYS_BONUS = 20;
 const DEADLINES = {
   soft:     new Date('2027-02-28T00:00:00'),
@@ -409,9 +411,46 @@ const SYSTEMS = [
   {id:'publichealth', name:'Public Health, Ethics & Safety', emoji:'⚖️', tint:'--sage-soft', topics:['Informed consent & capacity','Confidentiality & HIPAA','End-of-life & advance directives','Ethical principles','Communication & difficult conversations','Quality improvement (PDSA)','Patient safety & error types','Health insurance & economics']},
   {id:'biochem', name:'Biochemistry & Genetics', emoji:'🧬', tint:'--plum-soft', topics:['DNA structure & replication','DNA repair','Transcription','Translation','Lab techniques (PCR, blotting, ELISA)','Enzyme kinetics (Km, Vmax)','Glycolysis','Gluconeogenesis','TCA cycle & electron transport','Pyruvate dehydrogenase','Glycogen metabolism','Glycogen storage diseases','Lysosomal storage diseases','HMP shunt & G6PD','Fructose & galactose disorders','Fatty acid oxidation & synthesis','Ketone bodies','Cholesterol & lipoproteins','Amino acid disorders (PKU, alkaptonuria)','Urea cycle & hyperammonemia','Purine & pyrimidine metabolism','Vitamins B1-B3','Vitamins B6, B9, B12','Vitamins A, C, D, E, K','Ethanol metabolism','Inheritance patterns','Trisomies & chromosomal disorders','Collagen disorders (Ehlers-Danlos, Marfan, OI)']},
   {id:'immuno', name:'Immunology', emoji:'🛡️', tint:'--sky-soft', topics:['Innate immunity','Complement pathways','Complement deficiencies','MHC I & II','T cell activation & subsets','B cell activation & antibodies','Immunoglobulin isotypes','Cytokines (IL, TNF, IFN)','Vaccines','Hypersensitivity type I','Hypersensitivity II & III','Hypersensitivity IV','B-cell immunodeficiencies','T-cell & combined immunodeficiencies','Phagocyte defects (CGD, LAD, Chediak-Higashi)','Transplant rejection & immunosuppressants']},
-  {id:'micro', name:'Microbiology', emoji:'🦠', tint:'--coral-soft', topics:['Staph aureus','Staph epidermidis & saprophyticus','Strep pyogenes','Strep agalactiae','Strep pneumoniae & viridans','Enterococcus','Bacillus (anthracis, cereus)','Clostridia (tetani, botulinum, difficile, perfringens)','Corynebacterium diphtheriae','Listeria','Actinomyces & Nocardia','Neisseria (meningitidis, gonorrhoeae)','E. coli','Klebsiella, Enterobacter, Serratia','Salmonella & Shigella','Campylobacter, Vibrio, Yersinia','H. pylori','Pseudomonas','Haemophilus, Bordetella, Legionella','Zoonotics (Bartonella, Brucella, Francisella)','Mycobacteria (TB, leprae)','Spirochetes (Borrelia, Leptospira, Treponema)','Atypicals (Chlamydia, Mycoplasma, Rickettsia)','Herpesviruses (HSV, VZV, EBV, CMV)','Hepatitis viruses','HPV & other DNA viruses','Picornaviruses & enteroviruses','Influenza & paramyxoviruses','Flavivirus & togavirus (Dengue, Zika)','HIV / AIDS','Systemic mycoses (Histo, Blasto, Cocci)','Opportunistic fungi (Candida, Aspergillus, Crypto, PCP)','Cutaneous fungi & dermatophytes','Intestinal protozoa (Giardia, Entamoeba, Crypto)','Blood & tissue protozoa (Malaria, Babesia, Toxo)','Nematodes','Cestodes & trematodes','Antibacterials overview','Antifungals & antivirals']},
+  {id:'micro', name:'Microbiology (Sketchy)', emoji:'🦠', tint:'--coral-soft', groups:[
+    {name:'Gram-Positive Cocci', items:['Staphylococcus aureus','Staph epidermidis / saprophyticus','Streptococcus pyogenes','Streptococcus agalactiae','Strep pneumoniae / viridans','Enterococcus']},
+    {name:'Gram-Positive Bacilli', items:['Bacillus anthracis & cereus','Clostridium tetani','Clostridium botulinum','Clostridium difficile','Clostridium perfringens','Corynebacterium diphtheriae','Listeria monocytogenes']},
+    {name:'GP Branching Filamentous', items:['Actinomyces israelii','Nocardia asteroides']},
+    {name:'Gram-Negative Cocci', items:['Neisseria overview','Neisseria meningitidis','Neisseria gonorrhoeae']},
+    {name:'GN Bacilli — Enteric', items:['Klebsiella / Enterobacter / Serratia','Salmonella','Shigella','E. coli','Yersinia enterocolitica','Campylobacter','Vibrio','Helicobacter','Pseudomonas','Proteus mirabilis']},
+    {name:'GN Bacilli — Respiratory', items:['Bordetella pertussis','Haemophilus influenzae','Legionella']},
+    {name:'GN Bacilli — Zoonotic', items:['Bartonella henselae','Brucella','Francisella tularensis','Pasteurella multocida']},
+    {name:'Mycobacteria', items:['Mycobacterium tuberculosis','Mycobacterium leprae']},
+    {name:'Spirochetes', items:['Borrelia burgdorferi','Leptospira interrogans','Treponema pallidum']},
+    {name:'Atypicals & Gram-Indeterminate', items:['Chlamydia','Coxiella burnetii','Gardnerella vaginalis','Mycoplasma pneumoniae','Rickettsia overview','Rickettsia prowazekii','Rickettsia rickettsii']},
+    {name:'Systemic Mycoses', items:['Histoplasmosis','Blastomycosis','Coccidioidomycosis','Paracoccidioidomycosis']},
+    {name:'Cutaneous Mycoses', items:['Malassezia furfur','Dermatophytes','Sporothrix schenckii']},
+    {name:'Opportunistic Fungi', items:['Candida albicans','Aspergillus fumigatus','Cryptococcus neoformans','Mucormycetes','Pneumocystis jirovecii']},
+    {name:'Intestinal Protozoa', items:['Giardia','Entamoeba histolytica','Cryptosporidium']},
+    {name:'CNS Protozoa', items:['Toxoplasmosis','Trypanosoma brucei','Naegleria fowleri']},
+    {name:'Blood Protozoa', items:['Trypanosoma cruzi','Babesia','Plasmodium species','Leishmaniasis']},
+    {name:'Other Protozoa', items:['Trichomoniasis']},
+    {name:'Nematodes', items:['Intestinal nematodes','Tissue nematodes']},
+    {name:'Trematodes & Cestodes', items:['Cestodes','Trematodes']},
+    {name:'Viruses — RNA (+) sense', items:['Picornaviridae overview','Poliovirus','Coxsackie A & B','Rhinovirus','Hepatitis A','Calicivirus (Norwalk)','Flavivirus group','Hepatitis C','Togavirus group','Coronavirus','HIV / AIDS (retrovirus)']},
+    {name:'Viruses — RNA (−) sense', items:['Orthomyxovirus (influenza)','Paramyxovirus','Rhabdovirus','Filovirus','Bunyavirus','Arenavirus','Reovirus (dsRNA)']},
+    {name:'Viruses — DNA', items:['HSV 1 & 2','Epstein-Barr virus','Cytomegalovirus','Varicella-zoster virus','HHV-6 (roseola)','HHV-8 (Kaposi)','Polyomavirus','Papillomavirus','Parvovirus','Adenovirus','Poxvirus','Hepatitis B']}
+  ]},
   {id:'path', name:'General Pathology', emoji:'🔬', tint:'--gold-soft', topics:['Cellular adaptation (hyperplasia, metaplasia)','Reversible vs irreversible injury','Necrosis types','Apoptosis','Free radical injury','Acute inflammation','Chronic inflammation & granulomas','Wound healing','Neoplasia basics','Carcinogenesis & oncogenes','Tumor markers','Paraneoplastic syndromes','Amyloidosis']},
-  {id:'pharm', name:'General Pharmacology', emoji:'💊', tint:'--plum-soft', topics:['Pharmacokinetics (absorption, distribution)','Metabolism & elimination','Half-life & clearance','Dose-response, efficacy & potency','Enzyme induction & inhibition','Autonomic nervous system overview','Cholinomimetics','Anticholinesterases','Muscarinic antagonists','Sympathomimetics','Alpha & beta agonists','Beta blockers','Toxicities & antidotes','Drug reactions']},
+  {id:'pharm', name:'Pharmacology (Sketchy)', emoji:'💊', tint:'--plum-soft', groups:[
+    {name:'Autonomics', items:['Parasympathetics','Cholinomimetics','Acetylcholinesterase inhibitors','Muscarinic antagonists','Sympathetics','Sympathomimetics','Indirect sympathomimetics','Alpha drugs','Beta blockers']},
+    {name:'Cardiovascular & Renal', items:['Heart failure drugs','Digoxin, Milrinone, Nesiritide','ACE inhibitors, ARBs, Aliskiren','Acetazolamide, Mannitol','Loop diuretics','Thiazides','K+-sparing diuretics','Calcium channel blockers','Hypertension & emergencies','Antiarrhythmics I (A–C)','Antiarrhythmics II','Antiarrhythmics III','Antiarrhythmics IV','Antiarrhythmics V']},
+    {name:'Blood & Inflammation', items:['Heparin, LMWH, Fondaparinux, DTIs, Xa inhibitors','Warfarin','Antiplatelet agents','Thrombolytics','Statins','Cholestyramine, Ezetimibe','Fibrates, Niacin','NSAIDs','Gout drugs']},
+    {name:'Smooth Muscle', items:['Vasoactive drugs','Nitrates','Triptans & migraine','Prostaglandins, Bosentan, PDE5 inhibitors']},
+    {name:'Allergy & Pulmonary', items:['Antihistamines','Asthma therapy']},
+    {name:'GI & Diabetes', items:['Antiemetics','H2 blockers, PPIs','Laxatives & antidiarrheals','Insulin, Sulfonylureas, Meglitinides, GLP-1, DPP-4','Metformin, TZDs, Pramlintide, SGLT2']},
+    {name:'Endocrine (Thyroid/Para/Pituitary)', items:['PTU, Methimazole, Levothyroxine','Bisphosphonates, Raloxifene, Denosumab, Calcitonin','Teriparatide, Vitamin D, Cinacalcet, Sevelamer','Glucocorticoids','Growth hormone, Octreotide, Pegvisomant','ADH, DDAVP, ADH antagonists']},
+    {name:'Antibiotics — Cell Wall', items:['Penicillin','Nafcillin, Oxacillin, Dicloxacillin','Ampicillin, Amoxicillin, Piperacillin','Cephalosporins','Monobactams & Carbapenems','Vancomycin','Daptomycin']},
+    {name:'Antibiotics — Protein Synth & Other', items:['Tetracyclines','Macrolides','Clindamycin','Chloramphenicol','Linezolid','Aminoglycosides','TMP-SMX','Fluoroquinolones','Metronidazole']},
+    {name:'Antimycobacterial / Antifungal / Antiviral', items:['TB drugs','Leprosy drugs','Amphotericin, Flucytosine','Azoles','Griseofulvin, Terbinafine, Echinocandins','NRTIs','NNRTIs','Protease inhibitors','Maraviroc, Integrase inhibitors','Interferons','Ribavirin, Sofosbuvir, Simeprevir','Acyclovir, Valacyclovir, Famciclovir','Ganciclovir, Foscarnet, Cidofovir']},
+    {name:'CNS/Psych — Sedatives & Anesthetics', items:['Benzodiazepines, Flumazenil','Nonbenzo hypnotics, Melatonin, Ramelteon','Barbiturates','Propofol, Etomidate, Ketamine','Inhaled anesthetics, Dantrolene','Opioids, Naloxone, Naltrexone']},
+    {name:'CNS/Psych — Antidepressants, Mood & Antipsychotics', items:['SSRIs, SNRIs','Tricyclic antidepressants','MAO inhibitors','Bupropion, Mirtazapine, Trazodone','Lithium','Valproate, Topiramate, Lamotrigine, Levetiracetam','Carbamazepine, Phenytoin, Gabapentin','Ethosuximide','1st-gen antipsychotics','2nd-gen antipsychotics','Parkinson drugs']},
+    {name:'Anti-Neoplastics', items:['Methotrexate, 5-FU, Hydroxyurea','Azathioprine, 6-MP, Mycophenolate','Cladribine, Cytarabine, Gemcitabine','Cyclophosphamide, Nitrosoureas','Cisplatin, Carboplatin, Oxaliplatin','Bleomycin, Doxorubicin','Etoposide, Irinotecan, Topotecan','Vincristine, Vinblastine, Paclitaxel','Imatinib, Erlotinib, kinase inhibitors','Rituximab, Trastuzumab, monoclonals']}
+  ]},
   {id:'behavioral', name:'Behavioral Science & Psych', emoji:'💭', tint:'--plum-soft', topics:['Psychotic disorders & schizophrenia','Major depressive disorder','Bipolar disorder','Anxiety disorders','OCD & related disorders','PTSD & acute stress','Personality disorders (clusters A/B/C)','Somatic symptom disorders','Eating disorders','ADHD & disruptive disorders','Autism & childhood disorders','Substance intoxication & withdrawal','Sleep & sexual disorders','Classical & operant conditioning']},
   {id:'humandev', name:'Human Development', emoji:'👶', tint:'--sage-soft', topics:['Infant milestones (0-12 mo)','Toddler & preschool milestones','Puberty & Tanner stages','Adult development','Geriatric changes','Grief & bereavement']},
   {id:'cardio', name:'Cardiovascular', emoji:'❤️', tint:'--coral-soft', topics:['Cardiac cycle & pressure-volume loops','Ischemic heart disease & angina','Acute coronary syndrome (STEMI, NSTEMI, UA)','MI evolution & complications','Systolic vs diastolic heart failure','Dilated cardiomyopathy','Hypertrophic cardiomyopathy','Restrictive cardiomyopathy','Aortic stenosis & regurgitation','Mitral stenosis & regurgitation','Rheumatic heart disease','Endocarditis','Pericarditis & tamponade','Left-to-right shunts (ASD, VSD, PDA)','Right-to-left shunts (TOF, TGA)','Hypertension & emergencies','Dyslipidemias','Atherosclerosis','Aneurysms & dissection','Vasculitides','Arrhythmias & conduction blocks','Cardiac & antiarrhythmic drugs']},
@@ -425,35 +464,26 @@ const SYSTEMS = [
   {id:'neuro', name:'Neurology & Special Senses', emoji:'🧠', tint:'--plum-soft', topics:['Neuroanatomy & tracts','Cerebral cortex & localization','Brainstem & cranial nerves','Spinal cord syndromes','Ischemic stroke','Hemorrhagic stroke','Intracranial hemorrhages (epidural, subdural, SAH)','Aneurysms & AVM','Seizures & epilepsy','Headache (migraine, cluster, tension)','Dementias (Alzheimer, vascular, Lewy)','Parkinson & movement disorders','Huntington disease','Multiple sclerosis & demyelinating','Meningitis & encephalitis','CNS tumors (adult)','CNS tumors (pediatric)','Peripheral neuropathies (GBS, CMT)','Neurocutaneous syndromes','Eye disorders','Ear & vestibular disorders','Neuro & psych drugs']}
 ];
 const SYS = Object.fromEntries(SYSTEMS.map(s=>[s.id,s]));
+SYSTEMS.forEach(s=>{ if(s.groups){ s.topics=[]; s.groupRanges=[]; s.groups.forEach(g=>{ const st=s.topics.length; g.items.forEach(t=>s.topics.push(t)); s.groupRanges.push({name:g.name,from:st,to:s.topics.length-1}); }); } });
 const TOTAL_TOPICS = SYSTEMS.reduce((a,s)=>a+s.topics.length,0);
 
 const WEEKS = [
-  {n:1, phase:'Content Review', systems:['biostats','publichealth'], note:'Foundations'},
-  {n:2, systems:['biochem'], part:'Part 1'},
-  {n:3, systems:['biochem'], part:'Part 2'},
-  {n:4, systems:['immuno']},
-  {n:5, systems:['behavioral','humandev']},
-  {n:6, systems:['path']},
-  {n:7, phase:'Micro + Pharm Sprint', systems:['micro','pharm'], title:'Micro + Pharm', part:'Bugs 1–7 · Drugs 1–3', micro:[0,6], pharm:[0,2], note:'All done before Jan 1 💪'},
-  {n:8, systems:['micro','pharm'], title:'Micro + Pharm', part:'Bugs 8–14 · Drugs 4–6', micro:[7,13], pharm:[3,5]},
-  {n:9, systems:['micro','pharm'], title:'Micro + Pharm', part:'Bugs 15–21 · Drugs 7–8', micro:[14,20], pharm:[6,7]},
-  {n:10, systems:['micro','pharm'], title:'Micro + Pharm', part:'Bugs 22–27 · Drugs 9–10', micro:[21,26], pharm:[8,9]},
-  {n:11, systems:['micro','pharm'], title:'Micro + Pharm', part:'Bugs 28–33 · Drugs 11–12', micro:[27,32], pharm:[10,11]},
-  {n:12, systems:['micro','pharm'], title:'Micro + Pharm', part:'Bugs 34–39 · Drugs 13–14', micro:[33,38], pharm:[12,13], note:'Micro + Pharm complete 🎉'},
-  {n:13, phase:'Organ Systems', systems:['cardio']},
-  {n:14, systems:['pulm']},
-  {n:15, systems:['renal']},
-  {n:16, systems:['gi']},
-  {n:17, systems:['heme','endo']},
-  {n:18, systems:['repro','msk']},
-  {n:19, systems:['neuro'], note:'Last content block + catch-up 🎉'},
-  {n:20, phase:'Assessments & Practice', type:'milestone', milestone:'Pre-step by Jan 29 ✅', deadline:true, note:'Activate UWorld around now 💻'},
-  {n:21, phase:'Final Push', type:'weak', note:'Target weak areas from your pre-step'},
-  {n:22, type:'qbank', milestone:'Full-length practice'},
-  {n:23, type:'weak'},
-  {n:24, type:'qbank', milestone:'Final NBME / UWSA'},
-  {n:25, type:'weak', note:'Light review & rest before exam day'},
-  {n:26, type:'exam', milestone:'🎯 Take Step 1 — then celebrate'}
+  {n:1, phase:'Micro + Pharm Sprint', kind:'sprint', micro:[0,3], pharm:[0,1], note:'Check off Autonomics + Cardio/Renal pharm you already finished ✅'},
+  {n:2, kind:'sprint', micro:[4,7], pharm:[2,3], note:'Blood & inflammation pharm — where you are now'},
+  {n:3, kind:'sprint', micro:[8,11], pharm:[4,5]},
+  {n:4, kind:'sprint', micro:[12,15], pharm:[6,7]},
+  {n:5, kind:'sprint', micro:[16,19], pharm:[8,9]},
+  {n:6, kind:'sprint', micro:[20,21], pharm:[10,12], note:'Micro + Pharm done before Jan 1 🎉'},
+  {n:7, phase:'Organ Systems & Foundations', kind:'content', subs:['biostats','publichealth','biochem','immuno']},
+  {n:8, kind:'content', subs:['path','behavioral','humandev','cardio']},
+  {n:9, kind:'content', subs:['pulm','renal','gi','heme']},
+  {n:10, kind:'content', subs:['endo','repro','msk','neuro'], note:'Content review complete — first pass done 🎉'},
+  {n:11, phase:'Assessments & Practice', type:'milestone', milestone:'Pre-step by Jan 29 ✅', deadline:true, note:'Keep UWorld + NBME going'},
+  {n:12, phase:'Final Push', type:'weak', note:'Target weak areas from your pre-step'},
+  {n:13, type:'qbank', milestone:'Full-length practice'},
+  {n:14, type:'weak'},
+  {n:15, type:'qbank', milestone:'Final NBME / UWSA'},
+  {n:16, type:'exam', milestone:'🎯 Take Step 1 — then celebrate'}
 ];
 
 const REWARD_TIERS = [
@@ -553,9 +583,11 @@ function currentWeekNum(){ const diff=Math.floor((new Date()-START)/(7*864e5))+1
 function sameDay(a,b){ return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate(); }
 
 /* ---- tasks ---- */
-function sysNames(w){ return (w.systems||[]).map(id=>SYS[id].name).join(' + '); }
+function weekSubjects(w){ if(w.kind==='sprint') return ['micro','pharm']; if(w.kind==='content') return w.subs||[]; return []; }
+function sysNames(w){ return weekSubjects(w).map(id=>SYS[id].name).join(' · '); }
+
 function genTasks(w){
-  const s=sysNames(w); const p=w.part?' ('+w.part+')':'';
+  if(w.kind==='sprint'||w.kind==='content') return [{label:'🃏 Anki — review this week\'s cards', stars:3}];
   if(w.type==='review') return [
     {label:'🔁 Redo your missed & flagged questions', stars:3},
     {label:'🃏 Clear your Anki review backlog', stars:3},
@@ -582,24 +614,11 @@ function genTasks(w){
     {label:'⭐ '+w.milestone, stars:100},
     {label:'😴 Sleep well the night before', stars:5},
     {label:'🍀 Trust your prep — you did the work', stars:5}];
-  if(w.micro||w.pharm){
-    const nb=w.micro?(w.micro[1]-w.micro[0]+1):0, nd=w.pharm?(w.pharm[1]-w.pharm[0]+1):0;
-    const t=[];
-    if(nb) t.push({label:'🦠 Sketchy Micro — this week\'s '+nb+' bugs', stars:3});
-    if(nd) t.push({label:'💊 Pharm — '+nd+' drug topic'+(nd>1?'s':''), stars:3});
-    t.push({label:'🃏 Anki for this week\'s bugs + drugs', stars:3});
-    t.push({label:'☑️ Tick this week\'s items in Review', stars:3});
-    return t;
-  }
-  return [
-    {label:'📺 Watch the videos for '+s+p+' (B&B / Sketchy / Pathoma / Pixorize)', stars:3},
-    {label:'🃏 '+s+' flashcards / Anki', stars:3},
-    {label:'📖 Read First Aid: '+s, stars:3},
-    {label:'☑️ Tick off '+s+' topics in Review', stars:3}];
+  return [{label:'🃏 Anki', stars:3}];
 }
 function weekTitle(w){
-  if(w.title) return w.title+(w.part?' — '+w.part:'');
-  if(w.systems) return sysNames(w)+(w.part?' — '+w.part:'');
+  if(w.kind==='sprint') return 'Micro + Pharm';
+  if(w.kind==='content') return weekSubjects(w).map(id=>SYS[id].name.replace(/ \(Sketchy\)/,'')).join(' · ');
   if(w.type==='review') return 'Catch-up & Review';
   if(w.type==='rest') return 'Rest & Recharge';
   if(w.type==='qbank') return w.milestone?('Qbank + '+w.milestone):'Qbank Intensive';
@@ -608,7 +627,8 @@ function weekTitle(w){
   return 'Study Week';
 }
 function weekTint(w){
-  if(w.systems) return SYS[w.systems[0]].tint;
+  if(w.kind==='sprint') return '--coral-soft';
+  if(w.kind==='content') return SYS[weekSubjects(w)[0]].tint;
   if(w.type==='review') return '--plum-soft';
   if(w.type==='rest') return '--sky-soft';
   if(w.type==='qbank') return '--gold-soft';
@@ -616,15 +636,30 @@ function weekTint(w){
   return '--coral-soft';
 }
 function weekEmoji(w){
-  if(w.systems) return w.systems.map(id=>SYS[id].emoji).join('');
+  if(w.kind==='sprint') return '🦠💊';
+  if(w.kind==='content') return weekSubjects(w).map(id=>SYS[id].emoji).join('');
   return {review:'🔁',rest:'🎄',qbank:'✅',weak:'🎯',milestone:'🏁',exam:'🎯'}[w.type]||'📘';
 }
-function weekFocusHTML(w){
-  if(!(w.micro||w.pharm)) return '';
-  let s='<div class="wkfocus">';
-  if(w.micro){ s+='<div class="wf-group"><span class="wf-h">🦠 Bugs</span> '+SYS.micro.topics.slice(w.micro[0],w.micro[1]+1).map(esc).join(' · ')+'</div>'; }
-  if(w.pharm){ s+='<div class="wf-group"><span class="wf-h">💊 Drugs</span> '+SYS.pharm.topics.slice(w.pharm[0],w.pharm[1]+1).map(esc).join(' · ')+'</div>'; }
-  return s+'</div>';
+function topicCheckboxes(sysId, from, to){
+  const s=SYS[sysId]; let html='';
+  for(let i=from;i<=to;i++){
+    if(s.groupRanges){ const g=s.groupRanges.find(g=>g.from===i); if(g) html+='<div class="revgroup">'+esc(g.name)+'</div>'; }
+    const k=sysId+'::'+i; const c=state.topics[k]?'done':'';
+    html+='<div class="task '+c+'" data-topic="'+k+'"><div class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></div><div class="label">'+esc(s.topics[i])+'</div></div>';
+  }
+  return html;
+}
+function weekReviewRanges(w){
+  if(w.kind==='sprint'){ const r=[]; if(w.micro){const g=SYS.micro.groupRanges; r.push({sysId:'micro',from:g[w.micro[0]].from,to:g[w.micro[1]].to});} if(w.pharm){const g=SYS.pharm.groupRanges; r.push({sysId:'pharm',from:g[w.pharm[0]].from,to:g[w.pharm[1]].to});} return r; }
+  if(w.kind==='content') return weekSubjects(w).map(id=>({sysId:id,from:0,to:SYS[id].topics.length-1}));
+  return [];
+}
+function weekReviewHTML(w){
+  const ranges=weekReviewRanges(w); if(!ranges.length) return '';
+  return '<div class="wkreview">'+ranges.map(r=>{
+    const s=SYS[r.sysId]; const d=[]; for(let i=r.from;i<=r.to;i++) if(state.topics[r.sysId+'::'+i]) d.push(1);
+    return '<div class="wkrev-sub">'+s.emoji+' '+esc(s.name.replace(/ \(Sketchy\)/,''))+' <span class="wkrev-ct">'+d.length+'/'+(r.to-r.from+1)+'</span></div>'+topicCheckboxes(r.sysId,r.from,r.to);
+  }).join('')+'</div>';
 }
 
 /* ---- HOME ---- */
@@ -680,7 +715,7 @@ function renderHome(){
         <button class="pill" style="background:var(--plum-soft);color:var(--plum)" data-goto="schedule">See full schedule →</button>
       </div>
       <div style="margin-top:14px">
-        ${weekFocusHTML(week)}
+        ${weekReviewHTML(week)}
         ${tasks.map((t,i)=>{const k='w'+week.n+'::'+i;const d=state.tasks[k];return `
           <div class="task ${d?'done':''}" data-task="${k}">
             <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></div>
@@ -726,11 +761,11 @@ function renderWeekList(){
   let lastPhase='';
   for(const w of WEEKS){
     if(w.phase&&w.phase!==lastPhase){ lastPhase=w.phase;
-      const em={'Content Review':'📖','Micro + Pharm Sprint':'🦠','Organ Systems':'🫀','Assessments & Practice':'🧪','Final Push':'🏁'}[w.phase]||'📘';
+      const em={'Micro + Pharm Sprint':'🦠💊','Organ Systems & Foundations':'🫀','Assessments & Practice':'🧪','Final Push':'🏁'}[w.phase]||'📘';
       html+=`<div class="phase-div"><span class="em">${em}</span><h3>${w.phase}</h3><div class="rule"></div></div>`; }
     const isNow=w.n===cw, openIt=(w.n===cw)||(w.n===openWeekTarget);
     const tasks=genTasks(w);
-    const chips=(w.systems||[]).map(id=>{const s=SYS[id];return `<span class="syschip" style="background:var(${s.tint})">${s.emoji} ${s.name}</span>`;}).join('');
+    const chips=weekSubjects(w).map(id=>{const s=SYS[id];return `<span class="syschip" style="background:var(${s.tint})">${s.emoji} ${s.name.replace(/ \(Sketchy\)/,'')}</span>`;}).join('');
     html+=`<div class="wk ${isNow?'current':''} ${openIt?'open':''} ${w.deadline?'deadline':''}" data-wk="${w.n}">
       <div class="wk-head" data-wktoggle="${w.n}">
         <div class="wk-num"><small>WK</small><b>${w.n}</b></div>
@@ -738,7 +773,7 @@ function renderWeekList(){
           <div class="dd">${fmtRange(w.n)}${w.note?' · '+w.note:''}</div>
           ${chips?`<div class="chip-row">${chips}</div>`:''}</div>
         ${isNow?'<span class="now-badge">THIS WEEK</span>':''}<span class="chev">›</span></div>
-      <div class="wk-body">${weekFocusHTML(w)}${tasks.map((t,i)=>{const k='w'+w.n+'::'+i;const d=state.tasks[k];return `
+      <div class="wk-body">${weekReviewHTML(w)}${tasks.map((t,i)=>{const k='w'+w.n+'::'+i;const d=state.tasks[k];return `
         <div class="task ${d?'done':''}" data-task="${k}">
           <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></div>
           <div class="label">${t.label}</div><div class="rew">+${t.stars}⭐</div></div>`;}).join('')}</div></div>`;
@@ -825,10 +860,7 @@ function renderReview(){
           ${all?'<span class="sys-done-badge">Done ✓</span>':''}<span class="chev">›</span></div>
         <div class="sys-body">
           <button class="markall" data-markall="${s.id}">${all?'Uncheck all':'Mark all reviewed'}</button>
-          ${s.topics.map((t,i)=>{const k=s.id+'::'+i;const c=state.topics[k];return `
-            <div class="task ${c?'done':''}" data-topic="${k}">
-              <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></div>
-              <div class="label">${t}</div></div>`;}).join('')}</div></div>`;}).join('')}`;
+          ${topicCheckboxes(s.id,0,s.topics.length-1)}</div></div>`;}).join('')}`;
 }
 
 /* ---- JOURNAL (things I keep missing) ---- */
@@ -948,7 +980,7 @@ document.addEventListener('click',e=>{
       const nowComplete=sys.topics.every((_,i)=>state.topics[sysId+'::'+i]);
       burst(e.clientX,e.clientY,TOPIC_STAR);
       if(nowComplete){ confetti(); toast(sys.emoji+' '+sys.name+' complete! +'+SYS_BONUS+'⭐'); } }
-    pulseStars(); renderReview(); return; }
+    pulseStars(); renderActive(); return; }
 
   const st=e.target.closest('[data-systoggle]'); if(st){ document.querySelector('[data-sys="'+st.dataset.systoggle+'"]').classList.toggle('open'); return; }
   const wt=e.target.closest('[data-wktoggle]'); if(wt){ document.querySelector('[data-wk="'+wt.dataset.wktoggle+'"]').classList.toggle('open'); return; }
